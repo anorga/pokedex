@@ -8,6 +8,7 @@ function App() {
     "charmander",
     "pikachu",
     "charizard",
+    "chansey",
   ]);
 
   return (
