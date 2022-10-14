@@ -15,7 +15,16 @@ function PokemonList({ pokemon }) {
         <tbody>
           {pokemon.map((p) => (
             <tr key={p}>
-              <td className="border-collapse border border-slate-500 px-4 py-2">{p}</td>
+              <td className="border-collapse border border-slate-500 px-4 py-2">
+                {p}
+              </td>
+              <td>
+                <img
+                  src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"
+                  alt="pokemon"
+                  className="border border-slate-500 w-full h-full"
+                />
+              </td>
             </tr>
           ))}
         </tbody>
