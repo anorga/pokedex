@@ -6,15 +6,18 @@ import axios from "axios";
 
 function App() {
   const [pokemon, setPokemon] = useState([]);
-  const [pokemonURL, setPokemonURL] = useState(
+  const [pokemonUrl, setPokemonUrl] = useState(
     "https://pokeapi.co/api/v2/pokemon/"
   );
+  const [nextPageUrl, setNextPageUrl] = useState();
+  const [prevPageUrl, prevNextPageUrl] = useState();
+
 
   useEffect(() => {
-    axios.get(pokemonURL).then((res) => {
+    axios.get(pokemonUrl).then((res) => {
       setPokemon(res.data.results.map((p) => p.name));
     });
-  }, [pokemonURL]);
+  }, [pokemonUrl]);
 
   return (
     <>
