@@ -16,15 +16,18 @@ function App() {
   const [nextPageUrl, setNextPageUrl] = useState();
   const [prevPageUrl, setPrevPageUrl] = useState();
 
+  // SPRITES STATE
+  let [pokemonNumber, setPokemonNumber] = useState(0);
+
   useEffect(() => {
     axios.get(currentPageUrl).then((res) => {
       setNextPageUrl(res.data.next);
       setPrevPageUrl(res.data.previous);
       setPokemon(res.data.results.map((p) => p.name));
     });
-  }, [currentPageUrl]);
+  }, [currentPageUrl, pokemonNumber]);
 
-// PAGINATION FX
+  // PAGINATION FX
   function nextPage() {
     setCurrentPageUrl(nextPageUrl);
     setPokemonNumber(+20);
@@ -34,9 +37,6 @@ function App() {
     setCurrentPageUrl(prevPageUrl);
     setPokemonNumber(-20);
   }
-
-  // SPRITES STATE
-  let [pokemonNumber, setPokemonNumber] = useState(0);
 
   return (
     <>

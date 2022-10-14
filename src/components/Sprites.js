@@ -1,8 +1,6 @@
 import { useState } from "react";
+import axios from "axios";
 
-export default function Sprites () {
-    const [spriteUrl, setSpriteUrl] = useState([])
-    return (
-        <></>
-    )
-};
+export default function Sprites() {
+  return <></>;
+}
