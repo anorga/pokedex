@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import PokemonList from "./components/PokemonList";
 import Nav from "./components/Nav";
@@ -10,9 +10,11 @@ function App() {
     "https://pokeapi.co/api/v2/pokemon/"
   );
 
-  axios.get(pokemonURL).then((res) => {
-    setPokemon(res.data.results.map((p) => p.name));
-  });
+  useEffect(() => {
+    axios.get(pokemonURL).then((res) => {
+      setPokemon(res.data.results.map((p) => p.name));
+    });
+  }, [pokemonURL]);
 
   return (
     <>
