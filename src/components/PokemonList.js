@@ -1,6 +1,6 @@
 function PokemonList({ pokemon }) {
   return (
-    <>
+    <div className="ml-5 my-5">
       <table className="border-collapse border border-slate-500">
         <thead>
           <tr>
@@ -20,7 +20,7 @@ function PokemonList({ pokemon }) {
           ))}
         </tbody>
       </table>
-    </>
+    </div>
   );
 }
 
