@@ -7,26 +7,26 @@ import axios from "axios";
 
 function App() {
   const [pokemon, setPokemon] = useState([]);
-  const [pokemonUrl, setPokemonUrl] = useState(
+  const [currentPageUrl, setCurrentPageUrl] = useState(
     "https://pokeapi.co/api/v2/pokemon/"
   );
   const [nextPageUrl, setNextPageUrl] = useState();
   const [prevPageUrl, setPrevPageUrl] = useState();
 
   useEffect(() => {
-    axios.get(pokemonUrl).then((res) => {
+    axios.get(currentPageUrl).then((res) => {
       setNextPageUrl(res.data.next);
       setPrevPageUrl(res.data.previous);
       setPokemon(res.data.results.map((p) => p.name));
     });
-  }, [pokemonUrl]);
+  }, [currentPageUrl]);
 
   function nextPage() {
-    setPokemonUrl(nextPageUrl);
+    setCurrentPageUrl(nextPageUrl);
   }
 
   function prevPage() {
-    setPokemonUrl(prevPageUrl);
+    setCurrentPageUrl(prevPageUrl);
   }
 
   return (
