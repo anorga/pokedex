@@ -1,4 +1,13 @@
-function PokemonList({ pokemon }) {
+import { useState } from "react";
+
+function PokemonList({ pokemon, pokemonNumber }) {
+  const pokemonNumberUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/`;
+  //   let [pokemonNumber, setPokemonNumber] = useState(0);
+
+  //   function nextPageSprites() {
+  //     setPokemonNumber(+20);
+  //   }
+
   return (
     <div className="ml-5 my-5">
       <table className="border-collapse border border-slate-500">
@@ -13,20 +22,23 @@ function PokemonList({ pokemon }) {
           </tr>
         </thead>
         <tbody>
-          {pokemon.map((p) => (
-            <tr key={p}>
-              <td className="border-collapse border border-slate-500 px-4 py-2">
-                {p}
-              </td>
-              <td>
-                <img
-                  src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"
-                  alt="pokemon"
-                  className="border border-slate-500 w-full h-full"
-                />
-              </td>
-            </tr>
-          ))}
+          {pokemon.map((p) => {
+            pokemonNumber = pokemonNumber + 1;
+            return (
+              <tr key={p}>
+                <td className="border-collapse border border-slate-500 px-4 py-2">
+                  {p}
+                </td>
+                <td>
+                  <img
+                    src={pokemonNumberUrl + pokemonNumber + ".png"}
+                    alt="pokemon"
+                    className="border border-slate-500 w-full h-full"
+                  />
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
