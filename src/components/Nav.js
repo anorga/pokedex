@@ -1,10 +1,12 @@
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import pikachu from "./assets/surprisedPikachu.webp";
+import pokeball from "./assets/pokeball.png";
 
 const navigation = [
   { name: "Pokemon", href: "#", current: false },
-  // { name: "Team", href: "#", current: false },
+  { name: "Favorites", href: "#", current: false },
   // { name: "Projects", href: "#", current: false },
   // { name: "Calendar", href: "#", current: false },
 ];
@@ -15,7 +17,7 @@ function classNames(...classes) {
 
 export default function Nav() {
   return (
-    <Disclosure as="nav" className="bg-red-400">
+    <Disclosure as="nav" className="bg-gray-900">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -35,12 +37,12 @@ export default function Nav() {
                 <div className="flex flex-shrink-0 items-center">
                   <img
                     className="block h-8 w-auto lg:hidden"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                    src={pokeball}
                     alt="Your Company"
                   />
                   <img
                     className="hidden h-8 w-auto lg:block"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                    src={pokeball}
                     alt="Your Company"
                   />
                 </div>
@@ -53,8 +55,8 @@ export default function Nav() {
                         className={classNames(
                           item.current
                             ? "bg-gray-900 text-white"
-                            : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                          "px-3 py-2 rounded-md text-sm font-medium"
+                            : "text-white hover:animate-pulse hover:bg-gray-800 hover:text-white",
+                          "px-3 py-2 rounded-md text-lg font-semibold"
                         )}
                         aria-current={item.current ? "page" : undefined}
                       >
@@ -80,8 +82,8 @@ export default function Nav() {
                       <span className="sr-only">Open user menu</span>
                       <img
                         className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
+                        src={pikachu}
+                        alt="user profile"
                       />
                     </Menu.Button>
                   </div>
