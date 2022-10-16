@@ -3,10 +3,11 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import pikachu from "./assets/surprisedPikachu.webp";
 import pokeball from "./assets/pokeball.png";
+import { Link }from "react-router-dom";
 
 const navigation = [
-  { name: "Pokemon", href: "#", current: false },
-  { name: "Favorites", href: "#", current: false },
+  { name: "Pokedex", to: "/pokemon", current: false },
+  { name: "Favorites", to: "/pokemon/favorites", current: false },
   // { name: "Projects", href: "#", current: false },
   // { name: "Calendar", href: "#", current: false },
 ];
@@ -49,9 +50,9 @@ export default function Nav() {
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
-                      <a
+                      <Link
                         key={item.name}
-                        href={item.href}
+                        to={item.to}
                         className={classNames(
                           item.current
                             ? "bg-gray-900 text-white"
@@ -61,7 +62,7 @@ export default function Nav() {
                         aria-current={item.current ? "page" : undefined}
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </div>

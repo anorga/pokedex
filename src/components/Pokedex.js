@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Pagination from "./components/Pagination";
+import Pagination from "./Pagination";
 
 function Pokedex() {
   const pokemonNumberUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/`;
