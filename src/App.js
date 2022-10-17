@@ -9,7 +9,7 @@ function App() {
     <>
       <Nav />
       <Routes>
-        <Route path="/pokemon">
+        <Route path="/">
           <Route index element={<Pokedex />} />
           <Route path=":pokemonId" element={<Pokemon />} />
         </Route>
