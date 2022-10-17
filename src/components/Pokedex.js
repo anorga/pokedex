@@ -57,11 +57,10 @@ function Pokedex() {
                   <td className="border-collapse border border-slate-500 px-4 py-2">
                     {p}
                   </td>
-                  <td>
+                  <td className="border border-slate-500 w-10 h-full">
                     <img
                       src={pokemonNumberUrl + pokemonNumber + ".png"}
                       alt="pokemon"
-                      className="border border-slate-500 w-full h-full"
                     />
                   </td>
                 </tr>
