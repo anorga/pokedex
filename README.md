@@ -4,7 +4,7 @@ WORK IN PROGRESS - EARLY STAGES
 
 Pokemon Pokedex web application built using data from PokeAPI, React, React-Router, and Tailwind UI.
 
-Hosted on: 
+Hosted on: https://pokedex-anorga.vercel.app/
 
 ## Available Scripts
 
