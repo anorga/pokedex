@@ -51,10 +51,11 @@ export default function Nav() {
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
                       <Link
+                        reloadDocument
                         key={item.name}
                         to={item.to}
                         className={classNames(
-                          item.current
+                        item.current
                             ? "bg-gray-900 text-white"
                             : "text-white hover:animate-pulse hover:bg-gray-800 hover:text-white",
                           "px-3 py-2 rounded-md text-lg font-semibold"
