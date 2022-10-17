@@ -1,6 +1,10 @@
-# Getting Started with Create React App
+# Pokedex Web Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+WORK IN PROGRESS - EARLY STAGES
+
+Pokemon Pokedex web application built using data from PokeAPI, React, React-Router, and Tailwind UI.
+
+Hosted on: 
 
 ## Available Scripts
 
