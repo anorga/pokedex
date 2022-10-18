@@ -39,12 +39,12 @@ export default function Nav() {
                   <img
                     className="block h-8 w-auto lg:hidden"
                     src={pokeball}
-                    alt="Your Company"
+                    alt="Pokeball"
                   />
                   <img
                     className="hidden h-8 w-auto lg:block"
                     src={pokeball}
-                    alt="Your Company"
+                    alt="Pokeball"
                   />
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
@@ -151,7 +151,7 @@ export default function Nav() {
                 <Disclosure.Button
                   key={item.name}
                   as="a"
-                  href={item.href}
+                  href={item.to}
                   className={classNames(
                     item.current
                       ? "bg-gray-900 text-white"
