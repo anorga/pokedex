@@ -4,6 +4,7 @@ import Pagination from "./Pagination";
 import PokemonCard from "./PokemonCard";
 
 function Pokedex() {
+
   const [pokeData, setPokeData] = useState([]);
   const [currentPage, setCurrentPage] = useState(
     "https://pokeapi.co/api/v2/pokemon/"
