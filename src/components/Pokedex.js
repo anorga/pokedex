@@ -46,7 +46,7 @@ function Pokedex() {
     <>
       <Pagination toNextPage={toNextPage} toPrevPage={toPrevPage} />
       <PokemonCard pokeData={pokeData} />
-      {/* <Pagination nextPage={nextPage} prevPage={prevPage} /> */}
+      <Pagination toNextPage={toNextPage} toPrevPage={toPrevPage} />
     </>
   );
 }
