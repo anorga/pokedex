@@ -6,7 +6,7 @@ function PokemonCard({ pokeData }) {
         <div className="bg-gray-50 h-full" />
       </div>
       <div className="relative mx-auto max-w-6xl">
-        <div className="grid gap-5 mx-auto md:grid-cols-2 lg:grid-cols-5 max-w-lg  lg:max-w-none">
+        <div className="grid gap-5 mx-auto grid-cols-2 lg:grid-cols-5 max-w-lg  lg:max-w-none">
           {pokeData.map((p) => {
             return (
               <div
