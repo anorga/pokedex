@@ -37,49 +37,43 @@ function Pokedex() {
   }
   return (
     <>
-      <div className="ml-5 my-5">
-        <table className="border-collapse border border-slate-500">
-          <thead>
-            <tr>
-              <th className="border-collapse border border-slate-500 px-4 py-2">
-                Pokemon Name
-              </th>
-              <th className="border-collapse border border-slate-500 px-4 py-2">
-                Pokemon Sprite
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+      <div className="relative px-4 pt-16 pb-20 bg-gray-50 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
+        <div className="absolute inset-0">
+          <div className="bg-yellow-50 h-1/3 sm:h-full" />
+        </div>
+        <div className="relative mx-auto max-w-7xl">
+          <div className="grid max-w-lg gap-5 mx-auto mt-12 lg:grid-cols-4 lg:max-w-none">
             {pokemon.map((p) => {
               pokemonNumber = pokemonNumber + 1;
               return (
-                <tr key={p}>
-                  <td className="border-collapse border border-slate-500 px-4 py-2">
-                    {p}
-                  </td>
-                  <td className="border border-slate-500 w-10 h-full">
+                <div
+                  key={p}
+                  className="flex flex-col overflow-hidden rounded-lg shadow-lg"
+                >
+                  <div className="flex-shrink-0">
                     <img
-                      src={pokemonNumberUrl + pokemonNumber + ".png"}
-                      alt="pokemon"
+                      className="object-cover w-full h-full"
+                      src={`${pokemonNumberUrl}${pokemonNumber}.png`}
+                      alt="project"
                     />
-                  </td>
-                </tr>
+                  </div>
+                  <div className="flex flex-col justify-between flex-1 pb-6 bg-white">
+                    <div className="flex-1">
+                      <a href=".." className="block">
+                        <p className="text-xl font-semibold text-center text-gray-900 hover:text-red-800">
+                          {p}
+                        </p>
+                        {/* <p className="mt-3 text-base text-gray-500">{p.description}</p> */}
+                      </a>
+                    </div>
+                  </div>
+                </div>
               );
             })}
-          </tbody>
-        </table>
-
-        {/* <table>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>2</td>
-              <td>3</td>
-              <td>4</td>
-            </tr>
-          </tbody>
-        </table> */}
+          </div>
+        </div>
       </div>
+
       <Pagination nextPage={nextPage} prevPage={prevPage} />
     </>
   );
