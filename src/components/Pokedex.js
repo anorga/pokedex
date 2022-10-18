@@ -38,7 +38,7 @@ function Pokedex() {
   return (
     <>
     <Pagination nextPage={nextPage} prevPage={prevPage} />
-      <div className="relative px-4 pt-16 pb-20 bg-gray-50 sm:px-6 lg:pt-2 lg:pb-2 lg:px-8">
+      <div className="relative px-4 pt-1 pb-1 bg-gray-50 sm:px-6 lg:pt-2 lg:pb-2 lg:px-8">
         <div className="absolute inset-0">
           <div className="bg-gray-50 h-full" />
         </div>
