@@ -37,12 +37,13 @@ function Pokedex() {
   }
   return (
     <>
-      <div className="relative px-4 pt-16 pb-20 bg-gray-50 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
+    <Pagination nextPage={nextPage} prevPage={prevPage} />
+      <div className="relative px-4 pt-16 pb-20 bg-gray-50 sm:px-6 lg:pt-2 lg:pb-2 lg:px-8">
         <div className="absolute inset-0">
           <div className="bg-sky-50 h-full" />
         </div>
         <div className="relative mx-auto max-w-7xl">
-          <div className="grid max-w-lg gap-5 mx-auto mt-12 lg:grid-cols-4 lg:max-w-none">
+          <div className="grid max-w-lg gap-5 mx-auto lg:grid-cols-4 lg:max-w-none">
             {pokemon.map((p) => {
               pokemonNumber = pokemonNumber + 1;
               return (
@@ -73,7 +74,6 @@ function Pokedex() {
           </div>
         </div>
       </div>
-
       <Pagination nextPage={nextPage} prevPage={prevPage} />
     </>
   );
