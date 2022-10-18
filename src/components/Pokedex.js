@@ -43,7 +43,7 @@ function Pokedex() {
           <div className="bg-gray-50 h-full" />
         </div>
         <div className="relative mx-auto max-w-7xl">
-          <div className="grid max-w-lg gap-5 mx-auto lg:grid-cols-4 lg:max-w-none">
+          <div className="grid max-w-lg gap-5 mx-auto lg:grid-cols-5 lg:max-w-none">
             {pokemon.map((p) => {
               pokemonNumber = pokemonNumber + 1;
               return (
