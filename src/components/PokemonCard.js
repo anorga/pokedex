@@ -24,7 +24,7 @@ function PokemonCard({ pokeData }) {
                   <div className="flex-1">
                     <a href=".." className="block">
                       <p className="text-xl font-semibold text-center text-gray-900 hover:text-red-800">
-                        {`#${p.id} ${p.name}`}
+                        {`#${p.id} ${p.name.charAt(0).toUpperCase() + p.name.slice(1)}`}
                       </p>
                       {/* <p className="mt-3 text-base text-gray-500">{p.types}</p> */}
                     </a>
