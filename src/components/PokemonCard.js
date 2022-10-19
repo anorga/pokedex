@@ -15,7 +15,7 @@ function PokemonCard({ pokeData }) {
                 key={p.id}
                 className="flex flex-col overflow-hidden rounded-lg shadow-lg"
               >
-                <div className="flex-shrink-0 bg-white hover:bg-slate-300">
+                <div className="flex-shrink-0 bg-slate-200 hover:bg-slate-100">
                   <Link to="">
                     <img
                       className="object-cover w-full h-5/6"
