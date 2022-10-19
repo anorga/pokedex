@@ -18,7 +18,7 @@ function classNames(...classes) {
 
 export default function Nav() {
   return (
-    <Disclosure as="nav" className="bg-gray-900">
+    <Disclosure as="nav" className="bg-gray-700">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -58,7 +58,7 @@ export default function Nav() {
                         item.current
                             ? "bg-gray-900 text-white"
                             : "text-white hover:animate-pulse hover:bg-gray-800 hover:text-white",
-                          "px-3 py-2 rounded-md text-2xl font-semibold"
+                          "px-3 py-2 rounded-md text-3xl font-semibold"
                         )}
                         aria-current={item.current ? "page" : undefined}
                       >

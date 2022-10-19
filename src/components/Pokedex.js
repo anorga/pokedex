@@ -34,7 +34,7 @@ function Pokedex() {
     pokeFunction();
   },[currentPage]);
 
-  // PAGINATION FX
+  // Pagination
   function toNextPage() {
     setPokeData([])
     setCurrentPage(nextPage);
@@ -46,7 +46,7 @@ function Pokedex() {
   }
   return (
     <>
-      <Pagination toNextPage={toNextPage} toPrevPage={toPrevPage} />
+      {/* <Pagination toNextPage={toNextPage} toPrevPage={toPrevPage} /> */}
       <PokemonCard pokeData={pokeData} />
       <Pagination toNextPage={toNextPage} toPrevPage={toPrevPage} />
     </>
