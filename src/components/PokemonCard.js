@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function PokemonCard({ pokeData }) {
   console.log(pokeData);
   return (
@@ -13,22 +15,19 @@ function PokemonCard({ pokeData }) {
                 key={p.id}
                 className="flex flex-col overflow-hidden rounded-lg shadow-lg"
               >
-                <div className="flex-shrink-0 bg-white hover:bg-blue-50">
-                  <img
-                    className="object-cover w-full h-full"
-                    src={p.sprites.front_default}
-                    alt="project"
-                  />
-                </div>
-                <div className="flex flex-col justify-between flex-1 pb-1 pt-1 bg-white">
-                  <div className="flex-1">
-                    <a href=".." className="block">
-                      <p className="text-xl font-semibold text-center text-gray-900 hover:text-red-800">
-                        {`${p.id}. ${p.name.charAt(0).toUpperCase() + p.name.slice(1)}`}
-                      </p>
-                      {/* <p className="mt-3 text-base text-gray-500">{p.types}</p> */}
-                    </a>
-                  </div>
+                <div className="flex-shrink-0 bg-white hover:bg-slate-300">
+                  <Link to="">
+                    <img
+                      className="object-cover w-full h-5/6"
+                      src={p.sprites.front_default}
+                      alt="project"
+                    />
+                    <p className="text-lg font-semibold text-center text-gray-900 hover:text-slate-500">
+                      {`#${p.id} ${
+                        p.name.charAt(0).toUpperCase() + p.name.slice(1)
+                      }`}
+                    </p>
+                  </Link>
                 </div>
               </div>
             );
