@@ -3,7 +3,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 function Pagination({ toPrevPage, toNextPage }) {
   return (
     <>
-      <div className="rounded-md shadow-sm bg-slate-400 flex justify-center py-4">
+      <div className="bg-slate-400 flex justify-center py-4">
         <button
           type="button"
           className="relative inline-flex items-center rounded-2xl border border-gray-300 bg-slate-200 px-4 py-4 mx-5 text-sm font-medium text-gray-900 hover:bg-slate-300 focus:z-10 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"

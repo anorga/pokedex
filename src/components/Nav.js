@@ -3,7 +3,7 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import pikachu from "./assets/surprisedPikachu.webp";
 import pokeball from "./assets/pokeball.png";
-import { Link }from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const navigation = [
   { name: "Pokedex", to: "/", current: false },
@@ -36,16 +36,18 @@ export default function Nav() {
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
-                  <img
-                    className="block h-8 w-auto lg:hidden"
-                    src={pokeball}
-                    alt="Pokeball"
-                  />
-                  <img
-                    className="hidden h-8 w-auto lg:block"
-                    src={pokeball}
-                    alt="Pokeball"
-                  />
+                  <Link reloadDocument to="/">
+                    <img
+                      className="block h-8 w-auto lg:hidden"
+                      src={pokeball}
+                      alt="Pokeball"
+                    />
+                    <img
+                      className="hidden h-8 w-auto lg:block"
+                      src={pokeball}
+                      alt="Pokeball"
+                    />
+                  </Link>
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
@@ -55,7 +57,7 @@ export default function Nav() {
                         key={item.name}
                         to={item.to}
                         className={classNames(
-                        item.current
+                          item.current
                             ? "bg-gray-900 text-white"
                             : "text-white hover:animate-pulse hover:bg-gray-800 hover:text-white",
                           "px-3 py-2 rounded-md text-3xl font-semibold"
