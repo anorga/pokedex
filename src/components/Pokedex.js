@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Pagination from "./Pagination";
 import PokemonCard from "./PokemonCard";
+import Search from "./Search";
 
-function Pokedex({pullPokemonData}) {
-
+function Pokedex({ pullPokemonData }) {
   const [pokeData, setPokeData] = useState([]);
   const [currentPage, setCurrentPage] = useState(
     "https://pokeapi.co/api/v2/pokemon/"
@@ -14,12 +14,12 @@ function Pokedex({pullPokemonData}) {
   const [prevPage, setPrevPage] = useState();
 
   const pokeFunction = async () => {
-    setLoading(true)
+    setLoading(true);
     const res = await axios.get(currentPage);
     setNextPage(res.data.next);
     setPrevPage(res.data.previous);
     getPokemon(res.data.results);
-    setLoading(false)
+    setLoading(false);
   };
 
   const getPokemon = async (res) => {
@@ -27,7 +27,7 @@ function Pokedex({pullPokemonData}) {
       const result = await axios.get(item.url);
       setPokeData((state) => {
         state = [...state, result.data];
-        state.sort((a,b) => a.id>b.id?1:-1)
+        state.sort((a, b) => (a.id > b.id ? 1 : -1));
         return state;
       });
     });
@@ -35,22 +35,22 @@ function Pokedex({pullPokemonData}) {
 
   useEffect(() => {
     pokeFunction();
-  },[currentPage]);
+  }, [currentPage]);
 
   // Pagination
   function toNextPage() {
-    setPokeData([])
+    setPokeData([]);
     setCurrentPage(nextPage);
   }
 
   function toPrevPage() {
-    setPokeData([])
+    setPokeData([]);
     setCurrentPage(prevPage);
   }
 
   return (
     <>
-      <Pagination toNextPage={toNextPage} toPrevPage={toPrevPage} />
+      <Search toNextPage={toNextPage} toPrevPage={toPrevPage} />
       <PokemonCard pokeData={pokeData} loading={loading} />
       <Pagination toNextPage={toNextPage} toPrevPage={toPrevPage} />
     </>
