@@ -3,7 +3,7 @@ import axios from "axios";
 import Pagination from "./Pagination";
 import PokemonCard from "./PokemonCard";
 
-function Pokedex() {
+function Pokedex({pullPokemonData}) {
 
   const [pokeData, setPokeData] = useState([]);
   const [currentPage, setCurrentPage] = useState(
@@ -47,6 +47,7 @@ function Pokedex() {
     setPokeData([])
     setCurrentPage(prevPage);
   }
+
   return (
     <>
       <Pagination toNextPage={toNextPage} toPrevPage={toPrevPage} />

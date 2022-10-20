@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 
 function PokemonCard({ pokeData, loading }) {
-  console.log(pokeData);
   return (
     <div className="relative px-4 pt-1 pb-1 bg-slate-400 sm:px-6 lg:pt-2 lg:pb-2 lg:px-8 ">
       <div className="absolute inset-0 bg-slate-400">
