@@ -9,7 +9,7 @@ function App() {
   return (
     <>
       <Nav />
-      {/* <Search /> */}
+      <Search />
       <Routes>
         <Route index path="/" element={<Pokedex />} />
         <Route path=":pokemonId" element={<Pokemon />} />
