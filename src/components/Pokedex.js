@@ -9,6 +9,7 @@ function Pokedex() {
   const [currentPage, setCurrentPage] = useState(
     "https://pokeapi.co/api/v2/pokemon/"
   );
+  const [loading, setLoading] = useState();
   const [nextPage, setNextPage] = useState();
   const [prevPage, setPrevPage] = useState();
 
