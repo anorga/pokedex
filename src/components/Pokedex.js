@@ -9,15 +9,17 @@ function Pokedex() {
   const [currentPage, setCurrentPage] = useState(
     "https://pokeapi.co/api/v2/pokemon/"
   );
-  const [loading, setLoading] = useState();
+  const [loading, setLoading] = useState(true);
   const [nextPage, setNextPage] = useState();
   const [prevPage, setPrevPage] = useState();
 
   const pokeFunction = async () => {
+    setLoading(true)
     const res = await axios.get(currentPage);
     setNextPage(res.data.next);
     setPrevPage(res.data.previous);
     getPokemon(res.data.results);
+    setLoading(false)
   };
 
   const getPokemon = async (res) => {
@@ -48,7 +50,7 @@ function Pokedex() {
   return (
     <>
       <Pagination toNextPage={toNextPage} toPrevPage={toPrevPage} />
-      <PokemonCard pokeData={pokeData} />
+      <PokemonCard pokeData={pokeData} loading={loading} />
       <Pagination toNextPage={toNextPage} toPrevPage={toPrevPage} />
     </>
   );
