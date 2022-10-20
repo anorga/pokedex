@@ -4,8 +4,8 @@ function PokemonCard({ pokeData, loading }) {
   console.log(pokeData);
   return (
     <div className="relative px-4 pt-1 pb-1 bg-slate-400 sm:px-6 lg:pt-2 lg:pb-2 lg:px-8 ">
-      <div className="absolute inset-0 ">
-        <div className="bg-slate-400 h-screen sm:h-[185rem] lg:h-[66rem]" />
+      <div className="absolute inset-0 bg-slate-400">
+        <div className="bg-slate-400 h-screen sm:h-[185rem] lg:h-[60rem] z-0" />
       </div>
       <div className="relative mx-auto max-w-6xl">
         <div className="grid gap-5 mx-auto grid-cols-2 lg:grid-cols-5 max-w-lg  lg:max-w-none">
@@ -23,7 +23,7 @@ function PokemonCard({ pokeData, loading }) {
                   className="flex flex-col overflow-hidden rounded-lg shadow-lg"
                 >
                   <div className="flex-shrink-0 bg-slate-200 hover:bg-slate-100">
-                    <Link to="">
+                    <Link to={`${p.id}`}>
                       <img
                         className="object-cover w-full h-5/6"
                         src={p.sprites.front_default}
