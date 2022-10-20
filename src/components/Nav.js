@@ -8,8 +8,6 @@ import { Link } from "react-router-dom";
 const navigation = [
   { name: "Pokedex", to: "/", current: false },
   // { name: "Favorites", to: "/favorites", current: false },
-  // { name: "Projects", href: "#", current: false },
-  // { name: "Calendar", href: "#", current: false },
 ];
 
 function classNames(...classes) {
