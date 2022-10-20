@@ -12,7 +12,6 @@ function Pokemon() {
         state = [...state, res.data];
         return state;
       });
-      console.log(res.data);
     });
   }, []);
 
@@ -34,17 +33,16 @@ function Pokemon() {
                 return (
                   <div
                     key={Math.random()}
-                    className="inline-flex items-center justify-center rounded-lg border border-gray-900 bgwhite text-sm font-medium text-gray-900 w-20 h-10 mx-auto"
+                    className="inline-flex items-center justify-center rounded-lg border border-gray-900 bgwhite text-sm font-semibold text-gray-900 w-24 h-10 mx-auto my-1"
                   >
                     {t.type.name}
                   </div>
                 );
               })}
             </div>
-            <div className="text-center my-10">
+            <div className="text-center my-10 text-lg">
               {p.stats.map((s) => {
-                console.log(s.stat.name);
-                return <div>
+                return <div key={Math.random()}>
                   {s.stat.name}: {s.base_stat}
                 </div>;
               })}
