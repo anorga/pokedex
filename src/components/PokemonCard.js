@@ -9,7 +9,8 @@ function PokemonCard({ pokeData, loading }) {
       </div>
       <div className="relative mx-auto max-w-6xl">
         <div className="grid gap-5 mx-auto grid-cols-2 lg:grid-cols-5 max-w-lg  lg:max-w-none">
-          {loading ? (
+          {
+          loading ? (
             <div>
               <h1 className="font-bold h-screen text-2xl">Loading...</h1>
               <div className=""></div>
