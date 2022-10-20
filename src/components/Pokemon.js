@@ -17,19 +17,42 @@ function Pokemon() {
   }, []);
 
   return (
-    <>
+    <div className="bg-slate-400">
       {pokemonData.map((p) => {
         return (
-          <div key={p.id}>
-            <h1 className="text-2xl">This is pokemon {`#${p.id} ${
-                          p.name.charAt(0).toUpperCase() + p.name.slice(1)
-                        }`}</h1>
-            <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${p.id}.png`} alt="pokemon" />
-            <p>Pokemon information goes here</p>
+          <div key={p.id} className="h-screen">
+            <h1 className="text-5xl text-center py-10">{`#${p.id} ${
+              p.name.charAt(0).toUpperCase() + p.name.slice(1)
+            }`}</h1>
+            <img
+              src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${p.id}.png`}
+              className="pokemonImg mx-auto my-10"
+              alt="pokemon"
+            />
+            <div className="grid grid-cols-1">
+              {p.types.map((t) => {
+                return (
+                  <div
+                    key={Math.random()}
+                    className="inline-flex items-center justify-center rounded-lg border border-gray-900 bgwhite text-sm font-medium text-gray-900 w-20 h-10 mx-auto"
+                  >
+                    {t.type.name}
+                  </div>
+                );
+              })}
+            </div>
+            <div className="text-center my-10">
+              {p.stats.map((s) => {
+                console.log(s.stat.name);
+                return <div>
+                  {s.stat.name}: {s.base_stat}
+                </div>;
+              })}
+            </div>
           </div>
         );
       })}
-    </>
+    </div>
   );
 }
 

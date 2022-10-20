@@ -13,4 +13,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Pokemon Info Page */
+.pokemonImg {
+  height: 200px;
+  width: 200px;
+}
+
 
