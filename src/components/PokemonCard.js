@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function PokemonCard({ pokeData, loading }) {
+function PokemonCard({ pokeData, loading, filter}) {
   return (
     <div className="relative px-4 pt-1 pb-1 bg-slate-400 sm:px-6 lg:pt-2 lg:pb-2 lg:px-8 ">
       <div className="absolute inset-0 bg-slate-400">
@@ -15,8 +15,8 @@ function PokemonCard({ pokeData, loading }) {
             </div>
           ) : (
             pokeData.map((p) => {
-              console.log(p.sprites);
               return (
+                p.name.includes(filter) &&
                 <div
                   key={p.id}
                   className="flex flex-col overflow-hidden rounded-2xl shadow-lg  bg-slate-200"
