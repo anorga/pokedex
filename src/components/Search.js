@@ -13,10 +13,10 @@ function Search({ toNextPage, toPrevPage }) {
         <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
       </button>
       {/* Search Bar */}
-      <form className="flex justify-center py-5">
+      <form className="my-auto">
         <div className="relative">
           <input
-            className="search focus:ring-slate-500 h-10 w-96 rounded-lg border-gray-200 focus:border-slate-500 focus:outline-slate-500 focus:ring-1  pr-10 pl-3 text-sm placeholder-gray-500 focus:z-10 font-semibold"
+            className="focus:ring-slate-500 h-10 w-96 rounded-lg border-gray-200 focus:border-slate-500 focus:outline-slate-500 focus:ring-1  pr-10 pl-3 text-sm placeholder-gray-500 focus:z-10 font-semibold"
             placeholder="Search by Pokemon name or number"
             type="text"
           />
