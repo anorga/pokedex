@@ -1,6 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 
-function Search({ toNextPage, toPrevPage }) {
+function Search({ toNextPage, toPrevPage, handleSearchChange }) {
   return (
     <div className="bg-slate-400 flex justify-center py-5">
       {/* Left Button */}
@@ -19,6 +19,7 @@ function Search({ toNextPage, toPrevPage }) {
             className="focus:ring-slate-500 h-12 md:h-14 w-48 md:w-80 rounded-lg border-gray-200 focus:border-slate-500 focus:outline-slate-500 focus:ring-1 pr-8 pl-3 text-sm placeholder-gray-500 focus:z-10 font-semibold"
             placeholder="Search Pokemon"
             type="text"
+            onChange={handleSearchChange}
           />
 
           <button

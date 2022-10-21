@@ -57,7 +57,7 @@ function Pokedex({ pullPokemonData }) {
   return (
     <>
       <Search toNextPage={toNextPage} toPrevPage={toPrevPage} handleSearchChange={handleSearchChange} />
-      <PokemonCard pokeData={pokeData} loading={loading} />
+      <PokemonCard pokeData={pokeData} loading={loading} filter={filter} />
       <Pagination toNextPage={toNextPage} toPrevPage={toPrevPage} />
     </>
   );
