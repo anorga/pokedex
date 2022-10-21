@@ -36,12 +36,12 @@ export default function Nav() {
                 <div className="flex flex-shrink-0 items-center">
                   <Link reloadDocument to="/">
                     <img
-                      className="block h-8 w-auto lg:hidden"
+                      className="block h-10 w-auto lg:hidden"
                       src={pokeball}
                       alt="Pokeball"
                     />
                     <img
-                      className="hidden h-8 w-auto lg:block"
+                      className="hidden h-10 w-auto lg:block"
                       src={pokeball}
                       alt="Pokeball"
                     />
