@@ -8,24 +8,24 @@ function PokemonCard({ pokeData, loading }) {
       </div>
       <div className="relative mx-auto max-w-6xl">
         <div className="grid gap-5 mx-auto grid-cols-2 lg:grid-cols-5 max-w-lg  lg:max-w-5xl">
-          {
-          loading ? (
+          {loading ? (
             <div>
               <h1 className="font-bold h-screen text-2xl">Loading...</h1>
               <div className=""></div>
             </div>
           ) : (
             pokeData.map((p) => {
+              console.log(p.sprites);
               return (
                 <div
                   key={p.id}
-                  className="flex flex-col overflow-hidden rounded-lg shadow-lg"
+                  className="flex flex-col overflow-hidden rounded-2xl shadow-lg  bg-white"
                 >
-                  <div className="flex-shrink-0 bg-slate-200 hover:bg-slate-100">
+                  <div className="flex-shrink-0 flex-col bg-white hover:bg-slate-100">
                     <Link to={`${p.id}`}>
                       <img
-                        className="object-cover w-full h-5/6"
-                        src={p.sprites.front_default}
+                        className="object-cover"
+                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${p.id}.png`}
                         alt="project"
                       />
                       <p className="text-lg font-semibold text-center text-gray-900 hover:text-slate-500">
