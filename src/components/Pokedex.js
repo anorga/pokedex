@@ -12,6 +12,7 @@ function Pokedex({ pullPokemonData }) {
   const [loading, setLoading] = useState(true);
   const [nextPage, setNextPage] = useState();
   const [prevPage, setPrevPage] = useState();
+  const [filter, setFilter] = useState("");
 
   const pokeFunction = async () => {
     setLoading(true);
@@ -48,10 +49,15 @@ function Pokedex({ pullPokemonData }) {
     setCurrentPage(prevPage);
   }
 
+  // Search
+  const handleSearchChange = (e) => {
+    setFilter(e.target.value);
+  }
+
   return (
     <>
       <Search toNextPage={toNextPage} toPrevPage={toPrevPage} />
-      <PokemonCard pokeData={pokeData} loading={loading} />
+      <PokemonCard pokeData={pokeData} loading={loading} handleSearchChange={handleSearchChange} />
       <Pagination toNextPage={toNextPage} toPrevPage={toPrevPage} />
     </>
   );
