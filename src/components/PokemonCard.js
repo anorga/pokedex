@@ -7,7 +7,7 @@ function PokemonCard({ pokeData, loading }) {
         <div className="bg-slate-400 h-screen sm:h-[185rem] lg:h-[60rem] z-0" />
       </div>
       <div className="relative mx-auto max-w-6xl">
-        <div className="grid gap-5 mx-auto grid-cols-2 lg:grid-cols-5 max-w-lg  lg:max-w-5xl">
+        <div className="grid gap-5 mx-auto grid-cols-2 lg:grid-cols-5 max-w-sm  lg:max-w-4xl">
           {loading ? (
             <div>
               <h1 className="font-bold h-screen text-2xl">Loading...</h1>
@@ -21,7 +21,7 @@ function PokemonCard({ pokeData, loading }) {
                   key={p.id}
                   className="flex flex-col overflow-hidden rounded-2xl shadow-lg  bg-white"
                 >
-                  <div className="flex-shrink-0 flex-col bg-white hover:bg-slate-100">
+                  <div className="flex-shrink-0 flex-col bg-slate-200 hover:bg-slate-100">
                     <Link to={`${p.id}`}>
                       <img
                         className="object-cover"
