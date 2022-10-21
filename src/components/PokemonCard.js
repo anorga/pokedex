@@ -7,7 +7,7 @@ function PokemonCard({ pokeData, loading }) {
         <div className="bg-slate-400 h-screen sm:h-[185rem] lg:h-[60rem] z-0" />
       </div>
       <div className="relative mx-auto max-w-6xl">
-        <div className="grid gap-5 mx-auto grid-cols-2 lg:grid-cols-5 max-w-lg  lg:max-w-none">
+        <div className="grid gap-5 mx-auto grid-cols-2 lg:grid-cols-5 max-w-lg  lg:max-w-5xl">
           {
           loading ? (
             <div>
