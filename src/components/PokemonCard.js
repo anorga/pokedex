@@ -10,7 +10,7 @@ function PokemonCard({ pokeData, loading, filter}) {
         <div className="grid gap-5 mx-auto grid-cols-2 lg:grid-cols-5 max-w-sm  lg:max-w-5xl">
           {loading ? (
             <div>
-              <h1 className="font-bold h-screen text-2xl">Loading....</h1>
+              <h1 className="font-bold h-screen text-2xl">Loading...</h1>
               <div className=""></div>
             </div>
           ) : (
