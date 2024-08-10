@@ -1,13 +1,18 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 
-function Search({ toNextPage, toPrevPage, handleSearchChange }) {
+function Search({ toNextPage, toPrevPage, handleSearchChange, currentPage }) {
   return (
     <div className="bg-black flex justify-center py-5">
       {/* Left Button */}
       <button
         type="button"
-        className="rounded-2xl border border-gray-400 bg-slate-400 px-4 py-4 mx-5 text-sm font-medium text-gray-900 hover:bg-slate-300 focus:z-10 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+        className={`rounded-2xl border border-gray-400 px-4 py-4 mx-5 text-sm font-medium text-gray-900 focus:z-10 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500 ${
+          currentPage === 1
+            ? "bg-slate-600 cursor-not-allowed"
+            : "bg-slate-400 hover:bg-slate-300"
+        }`}
         onClick={toPrevPage}
+        disabled={currentPage === 1}
       >
         <span className="sr-only">Previous</span>
         <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
