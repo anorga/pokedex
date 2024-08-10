@@ -6,7 +6,7 @@ function Search({ toNextPage, toPrevPage, handleSearchChange }) {
       {/* Left Button */}
       <button
         type="button"
-        className="rounded-2xl border border-gray-300 bg-slate-200 px-4 py-4 mx-5 text-sm font-medium text-gray-900 hover:bg-slate-300 focus:z-10 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+        className="rounded-2xl border border-gray-400 bg-slate-400 px-4 py-4 mx-5 text-sm font-medium text-gray-900 hover:bg-slate-300 focus:z-10 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
         onClick={toPrevPage}
       >
         <span className="sr-only">Previous</span>
@@ -16,7 +16,7 @@ function Search({ toNextPage, toPrevPage, handleSearchChange }) {
       <form className="my-auto">
         <div className="relative">
           <input
-            className="focus:ring-slate-500 h-12 md:h-14 w-48 md:w-80 rounded-lg border-gray-200 focus:border-slate-500 focus:outline-slate-500 focus:ring-1 pr-8 pl-3 text-sm placeholder-gray-500 focus:z-10 font-semibold"
+            className="focus:ring-slate-500 h-12 md:h-14 w-48 md:w-80 rounded-lg bg-slate-400 border-gray-200 focus:border-slate-500 focus:outline-slate-500 focus:ring-1 pr-8 pl-3 text-sm placeholder-black focus:z-10 font-semibold"
             placeholder="Search Pokemon"
             type="text"
             onChange={handleSearchChange}
@@ -24,7 +24,7 @@ function Search({ toNextPage, toPrevPage, handleSearchChange }) {
 
           <button
             type="submit"
-            className="absolute inset-y-0 right-0 mr-px rounded-r-lg p-2 text-gray-900"
+            className="absolute inset-y-0 right-0 mr-px rounded-r-lg p-2 text-black"
           >
             <span className="sr-only">Submit Search</span>
             <svg
@@ -45,7 +45,7 @@ function Search({ toNextPage, toPrevPage, handleSearchChange }) {
       {/* Right Button */}
       <button
         type="button"
-        className="rounded-2xl border border-gray-300 bg-slate-200 px-4 py-4  mx-5 text-sm font-medium text-gray-900 hover:bg-slate-300 focus:z-10 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+        className="rounded-2xl border border-gray-400 bg-slate-400 px-4 py-4  mx-5 text-sm font-medium text-gray-900 hover:bg-slate-300 focus:z-10 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
         onClick={toNextPage}
       >
         <span className="sr-only">Next</span>
