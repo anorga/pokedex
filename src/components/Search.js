@@ -1,4 +1,4 @@
-import {setIsFocused, isFocused} from 'react';
+import React, { useState, setIsFocused, isFocused } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import magnify from "./assets/magnifying_glass.png"
 
