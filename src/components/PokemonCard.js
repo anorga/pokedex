@@ -25,6 +25,7 @@ function PokemonCard({ pokeData, loading, filter}) {
                     <Link to={`${p.id}`}>
                       <img
                         className="object-cover px-8 py-1"
+                        // src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.id}.png`}
                         src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${p.id}.png`}
                         alt="project"
                       />
