@@ -1,4 +1,3 @@
-import React, { useState, setIsFocused, isFocused } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import magnify from "./assets/magnifying_glass.png"
 
@@ -24,11 +23,9 @@ function Search({ toNextPage, toPrevPage, handleSearchChange, currentPage }) {
         <div className="relative flex items-center">
           <input
             className="h-12 md:h-14 w-48 text-3xl placeholder-black focus:outline-none text-center pr-10 placeholder-shown:text-center focus:placeholder-opacity-0"
-            placeholder={isFocused ? "" : "Search"}
+            placeholder="Search"
             type="text"
             onChange={handleSearchChange}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
           />
           {/* Search Icon */}
           <button
