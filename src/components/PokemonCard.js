@@ -19,9 +19,9 @@ function PokemonCard({ pokeData, loading, filter}) {
                 p.name.includes(filter) &&
                 <div
                   key={p.id}
-                  className="flex flex-col overflow-hidden rounded-2xl shadow-lg  bg-slate-400"
+                  className="flex flex-col overflow-hidden border-4 border-black shadow-lg bg-white pixel-corners"
                 >
-                  <div className="flex-shrink-0 flex-col bg-slate-400 hover:bg-slate-300">
+                  <div className="flex-shrink-0 flex-col bg-white hover:bg-slate-300">
                     <Link to={`${p.id}`}>
                       <img
                         className="object-cover px-8 py-1"

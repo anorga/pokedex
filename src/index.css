@@ -12,11 +12,29 @@ body {
   font-weight: 400;
   font-style: normal;
 }
+.pixel-corners {
+  clip-path: 
+    polygon(
+      0px 4px,
+      4px 4px,
+      4px 0px,
+      calc(100% - 4px) 0px,
+      calc(100% - 4px) 4px,
+      100% 4px,
+      100% calc(100% - 4px),
+      calc(100% - 4px) calc(100% - 4px),
+      calc(100% - 4px) 100%,
+      4px 100%,
+      4px calc(100% - 4px),
+      0px calc(100% - 4px)
+    );
+}
 
 /* Pokemon Info Page */
 .pokemonImg {
   height: 200px;
   width: 200px;
 }
+
 
 
