@@ -21,8 +21,8 @@ function Search({ toNextPage, toPrevPage, handleSearchChange, currentPage }) {
       <form className="my-auto">
         <div className="relative">
           <input
-            className="focus:ring-slate-500 h-12 md:h-14 w-48 md:w-80 rounded-lg bg-slate-400 border-gray-200 focus:border-slate-500 focus:outline-slate-500 focus:ring-1 pr-8 pl-3 text-sm placeholder-black focus:z-10 font-semibold"
-            placeholder="Search Pokemon"
+            className="focus:ring-slate-500 h-12 md:h-14 w-48 md:w-80 rounded-lg bg-slate-400 border-gray-200 focus:border-slate-500 focus:outline-slate-500 focus:ring-1 pr-8 pl-3 text-2xl placeholder-black focus:z-10 font-semibold"
+            placeholder="Search"
             type="text"
             onChange={handleSearchChange}
           />
