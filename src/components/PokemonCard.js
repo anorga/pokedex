@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 
 function PokemonCard({ pokeData, loading, filter}) {
   return (
-    <div className="relative px-4 pt-1 pb-1 bg-black sm:px-6 lg:pt-2 lg:pb-2 lg:px-8 ">
-      <div className="absolute inset-0 bg-black">
-        <div className="bg-black h-screen sm:h-[185rem] md:h-[40rem] z-0" />
+    <div className="relative px-4 pt-1 pb-1 bg-white sm:px-6 lg:pt-2 lg:pb-2 lg:px-8 ">
+      <div className="absolute inset-0 bg-white">
+        <div className="bg-white h-screen sm:h-[185rem] md:h-[40rem] z-0" />
       </div>
       <div className="relative mx-auto max-w-6xl">
         <div className="grid gap-5 mx-auto grid-cols-2 lg:grid-cols-5 max-w-sm  lg:max-w-5xl">

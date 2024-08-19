@@ -3,7 +3,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 function Pagination({ toPrevPage, toNextPage }) {
   return (
     <>
-      <div className="bg-black flex justify-center py-4">
+      <div className="bg-white flex justify-center py-4">
         {/* Removed bottom buttons */}
         {/* <button
           type="button"

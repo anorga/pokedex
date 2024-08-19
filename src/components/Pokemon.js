@@ -16,11 +16,11 @@ function Pokemon() {
   }, []);
 
   return (
-    <div className="bg-slate-400">
+    <div className="bg-white">
       {pokemonData.map((p) => {
         return (
           <div key={p.id} className="h-screen">
-            <h1 className="text-5xl text-center py-10">{`#${p.id} ${
+            <h1 className="text-5xl text-center py-10">{`${p.id}. ${
               p.name.charAt(0).toUpperCase() + p.name.slice(1)
             }`}</h1>
             <img

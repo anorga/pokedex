@@ -2,7 +2,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 
 function Search({ toNextPage, toPrevPage, handleSearchChange, currentPage }) {
   return (
-    <div className="bg-black flex justify-center py-5">
+    <div className="bg-white flex justify-center py-5">
       {/* Left Button */}
       <button
         type="button"
