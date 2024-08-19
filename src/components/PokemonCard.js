@@ -28,7 +28,7 @@ function PokemonCard({ pokeData, loading, filter}) {
                         src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${p.id}.png`}
                         alt="project"
                       />
-                      <p className="text-lg text-center text-gray-900 hover:text-slate-500">
+                      <p className="text-lg text-center hover:text-gray-500">
                         {`${p.id}. ${
                           p.name.charAt(0).toUpperCase() + p.name.slice(1)
                         }`}
