@@ -5,7 +5,7 @@ import pokeball from "./assets/pokeball.png";
 import { Link } from "react-router-dom";
 
 const navigation = [
-  { name: "Pokedex", to: "/", current: false },
+  { name: "Home", to: "/", current: false },
   // { name: "Favorites", to: "/favorites", current: false },
 ];
 
