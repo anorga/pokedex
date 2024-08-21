@@ -1,8 +1,8 @@
 # Pokedex Web Application
 
-WORK IN PROGRESS - EARLY STAGES
+WORK IN PROGRESS
 
-Pokemon Pokedex web application built using data from PokeAPI, React, React-Router, and Tailwind UI.
+A Pokémon Pokédex web application developed using React, integrated with data from the PokeAPI. The application is styled with Tailwind UI and incorporates React-Router. 
 
 Hosted on: [https://pokedex-anorga.vercel.app/](https://pokedex-navy-delta.vercel.app)
 
