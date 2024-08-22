@@ -33,7 +33,7 @@ function Pokemon() {
                 return (
                   <div
                     key={Math.random()}
-                    className="inline-flex items-center justify-center rounded-lg border border-gray-900 bgwhite text-sm font-semibold text-gray-900 w-24 h-10 mx-auto my-1"
+                    className="inline-flex items-center justify-center rounded-lg border border-gray-900 bgwhite text-base text-gray-900 w-24 h-10 mx-auto my-1"
                   >
                     {t.type.name}
                   </div>
@@ -43,7 +43,7 @@ function Pokemon() {
             <div className="text-center my-10 text-lg">
               <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
                 {p.stats.map((s, index) => (
-                  <div key={s.stat.name} className={`p-2 ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}>
+                  <div key={s.stat.name} className={`p-2 rounded-lg  ${index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-100'}`}>
                     <span>{s.stat.name}:</span> {s.base_stat}
                   </div>
                 ))}
