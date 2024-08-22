@@ -41,11 +41,13 @@ function Pokemon() {
               })}
             </div>
             <div className="text-center my-10 text-lg">
-              {p.stats.map((s) => {
-                return <div key={Math.random()}>
-                  {s.stat.name}: {s.base_stat}
-                </div>;
-              })}
+              <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+                {p.stats.map((s, index) => (
+                  <div key={s.stat.name} className={`p-2 ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}>
+                    <span>{s.stat.name}:</span> {s.base_stat}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         );
