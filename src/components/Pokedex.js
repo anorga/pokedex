@@ -6,13 +6,13 @@ import Search from "./Search";
 
 function Pokedex() {
   const [pokeData, setPokeData] = useState([]);
-  const [allPokemon, setAllPokemon] = useState([]); // To store all Pokemon names for search
+  const [allPokemon, setAllPokemon] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [nextPage, setNextPage] = useState();
   const [prevPage, setPrevPage] = useState();
   const [filter, setFilter] = useState("");
-  const [searchResults, setSearchResults] = useState([]); // To store search results
+  const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
 
   // Fetch paginated Pokemon data
@@ -47,70 +47,94 @@ function Pokedex() {
     }
   };
 
-  // Search the global Pokemon API
   const searchPokemon = async (searchTerm) => {
     if (!searchTerm.trim()) {
       setIsSearching(false);
+      setSearchResults([]);
       return;
     }
-    
+    setSearchResults([]);
     setIsSearching(true);
     setLoading(true);
-    setSearchResults([]);
     
-    // Filter matching Pokemon names
-    const matchingPokemon = allPokemon.filter(pokemon => 
-      pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    
-    // Fetch details for matching Pokemon
-    const results = [];
-    const fetchPromises = matchingPokemon.slice(0, 20).map(async (pokemon) => {
-      try {
-        const result = await axios.get(pokemon.url);
-        return result.data;
-      } catch (error) {
-        console.error(`Error fetching details for ${pokemon.name}:`, error);
-        return null;
+    try {
+      const matchingPokemon = allPokemon.filter(pokemon => 
+        pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      if (matchingPokemon.length === 0) {
+        setSearchResults([]);
+        setLoading(false);
+        return;
       }
-    });
-    
-    const fetchedResults = await Promise.all(fetchPromises);
-    const validResults = fetchedResults.filter(result => result !== null);
-    validResults.sort((a, b) => (a.id > b.id ? 1 : -1));
-    setSearchResults(validResults);
-    setLoading(false);
+      const fetchPromises = matchingPokemon.slice(0, 20).map(async (pokemon) => {
+        try {
+          const result = await axios.get(pokemon.url);
+          return result.data;
+        } catch (error) {
+          console.error(`Error fetching details for ${pokemon.name}:`, error);
+          return null;
+        }
+      });
+      const fetchedResults = await Promise.all(fetchPromises);
+      const validResults = fetchedResults.filter(result => result !== null);
+      validResults.sort((a, b) => (a.id > b.id ? 1 : -1));
+
+      setSearchResults(validResults);
+    } catch (error) {
+      console.error("Error searching Pokemon:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Handle search input
   const handleSearchChange = (e) => {
     const searchTerm = e.target.value;
     setFilter(searchTerm);
-    
-    // Debounce search to avoid too many API calls
-    const timeoutId = setTimeout(() => {
+
+    if (window.searchTimeout) {
+      clearTimeout(window.searchTimeout);
+      window.searchTimeout = null;
+    }
+
+    if (!searchTerm.trim()) {
+      clearSearch();
+      return;
+    }
+
+    window.searchTimeout = setTimeout(() => {
       searchPokemon(searchTerm);
     }, 500);
-    
-    return () => clearTimeout(timeoutId);
   };
 
-  // Handle search form submission
+  // Handle search submission
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    searchPokemon(filter);
+    if (filter.trim()) {
+      if (window.searchTimeout) {
+        clearTimeout(window.searchTimeout);
+        window.searchTimeout = null;
+      }
+      searchPokemon(filter);
+    } else {
+      clearSearch();
+    }
   };
 
   useEffect(() => {
-    // Reset search when changing pages
-    if (!isSearching) {
+    if (!isSearching && pokeData.length === 0) {
       pokeFunction();
     }
-  }, [currentPage, isSearching]);
+  }, [currentPage, isSearching, pokeData.length]);
 
   useEffect(() => {
-    // Fetch all Pokemon names once on component mount
     fetchAllPokemonNames();
+    return () => {
+      if (window.searchTimeout) {
+        clearTimeout(window.searchTimeout);
+        window.searchTimeout = null;
+      }
+    };
   }, []);
 
   // Pagination
@@ -128,11 +152,21 @@ function Pokedex() {
     }
   }
 
-  // Clear search and return to paginated view
   const clearSearch = () => {
+    // Clear search state
     setFilter("");
     setIsSearching(false);
     setSearchResults([]);
+    
+    if (window.searchTimeout) {
+      clearTimeout(window.searchTimeout);
+      window.searchTimeout = null;
+    }
+
+    if (pokeData.length === 0) {
+      setLoading(true);
+      pokeFunction();
+    }
   };
 
   return (
@@ -150,7 +184,7 @@ function Pokedex() {
       <PokemonCard 
         pokeData={isSearching ? searchResults : pokeData} 
         loading={loading} 
-        filter=""  // No need for filter here as we're filtering at API level
+        filter="" 
       />
       {!isSearching && (
         <Pagination toNextPage={toNextPage} toPrevPage={toPrevPage} currentPage={currentPage} />
