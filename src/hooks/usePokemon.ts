@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import {
   fetchPokemon,
   fetchPokemonIndex,
@@ -43,4 +43,24 @@ export function usePokemonDetail(idOrName: string | undefined) {
     queryFn: ({ signal }) => fetchPokemon(idOrName!, signal),
     enabled: !!idOrName,
   });
+}
+
+/** Resolve a list of favorite ids into full Pokemon detail records. */
+export function useFavoritePokemon(ids: number[]) {
+  const queries = useQueries({
+    queries: ids.map((id) => ({
+      queryKey: ["pokemon", "detail", String(id)],
+      queryFn: ({ signal }: { signal: AbortSignal }) =>
+        fetchPokemon(id, signal),
+    })),
+  });
+
+  return {
+    data: queries
+      .map((q) => q.data)
+      .filter((p): p is Pokemon => p !== undefined)
+      .sort((a, b) => a.id - b.id),
+    isPending: ids.length > 0 && queries.some((q) => q.isPending),
+    isError: queries.some((q) => q.isError),
+  };
 }

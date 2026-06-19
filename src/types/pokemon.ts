@@ -23,9 +23,20 @@ export interface PokemonStat {
   stat: NamedApiResource;
 }
 
+export interface PokemonAbility {
+  ability: NamedApiResource;
+  is_hidden: boolean;
+  slot: number;
+}
+
 export interface Pokemon {
   id: number;
   name: string;
+  /** Decimetres (PokeAPI unit). */
+  height: number;
+  /** Hectograms (PokeAPI unit). */
+  weight: number;
   types: PokemonType[];
   stats: PokemonStat[];
+  abilities: PokemonAbility[];
 }

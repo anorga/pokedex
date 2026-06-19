@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import Pagination from "./Pagination.tsx";
 import PokemonCard from "./PokemonCard.tsx";
 import Search from "./Search.tsx";
@@ -8,8 +9,10 @@ import {
   usePokemonPage,
   usePokemonSearch,
 } from "../hooks/usePokemon";
+import { fetchPokemonPage } from "../api/pokeapi";
 
 function Pokedex() {
+  const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
 
@@ -26,23 +29,45 @@ function Pokedex() {
   const toPrevPage = () => setPage((p) => Math.max(1, p - 1));
   const clearSearch = () => setFilter("");
 
+  // Warm the cache for the next page so navigation feels instant.
+  const prefetchNextPage = useCallback(() => {
+    const next = page + 1;
+    queryClient.prefetchQuery({
+      queryKey: ["pokemon", "page", next],
+      queryFn: ({ signal }) => fetchPokemonPage(next, signal),
+    });
+  }, [page, queryClient]);
+
   return (
     <>
       <Search
         filter={filter}
-        page={page}
         isSearching={isSearching}
         onFilterChange={setFilter}
         onClear={clearSearch}
-        onPrev={toPrevPage}
-        onNext={toNextPage}
       />
+      {isSearching && !active.isPending && !active.isError && (
+        <p className="px-4 pb-1 pt-2 text-center text-sm text-slate-500 dark:text-slate-400">
+          {active.data?.length === 0
+            ? `No results for "${debouncedFilter.trim()}"`
+            : `${active.data?.length} result${
+                active.data?.length === 1 ? "" : "s"
+              } for "${debouncedFilter.trim()}"`}
+        </p>
+      )}
       <PokemonCard
         pokemon={active.data ?? []}
         isLoading={active.isPending}
         isError={active.isError}
       />
-      {!isSearching && <Pagination />}
+      {!isSearching && (
+        <Pagination
+          page={page}
+          onPrev={toPrevPage}
+          onNext={toNextPage}
+          onNextHover={prefetchNextPage}
+        />
+      )}
     </>
   );
 }

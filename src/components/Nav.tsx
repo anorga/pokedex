@@ -1,31 +1,49 @@
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Fragment } from "react";
-import { Link } from "react-router-dom";
+import { Disclosure } from "@headlessui/react";
+import {
+  Bars3Icon,
+  MoonIcon,
+  SunIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
+import { NavLink } from "react-router-dom";
 import pokeball from "../assets/pokeball.png";
+import { useTheme } from "../hooks/useTheme";
+import { useFavorites } from "../hooks/useFavorites";
 
 interface NavItem {
   name: string;
   to: string;
-  current: boolean;
 }
 
-const navigation: NavItem[] = [{ name: "Home", to: "/", current: false }];
+const navigation: NavItem[] = [
+  { name: "Home", to: "/" },
+  { name: "Favorites", to: "/favorites" },
+];
 
-function classNames(...classes: Array<string | false | undefined>): string {
-  return classes.filter(Boolean).join(" ");
+function linkClasses({ isActive }: { isActive: boolean }): string {
+  return [
+    "rounded-md px-3 py-2 text-sm font-semibold transition-colors",
+    isActive
+      ? "bg-slate-700/60 text-white"
+      : "text-slate-300 hover:bg-slate-700/40 hover:text-white",
+  ].join(" ");
 }
 
 export default function Nav() {
+  const { theme, toggleTheme } = useTheme();
+  const { favorites } = useFavorites();
+
   return (
-    <Disclosure as="nav" className="bg-gray-900">
+    <Disclosure
+      as="nav"
+      className="sticky top-0 z-50 border-b border-slate-800 bg-slate-900/95 backdrop-blur"
+    >
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-6xl px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                {/* Mobile menu button*/}
-                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-slate-300 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-600">
+                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-slate-400 hover:bg-slate-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-600">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
                     <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -34,87 +52,78 @@ export default function Nav() {
                   )}
                 </Disclosure.Button>
               </div>
+
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                <div className="flex flex-shrink-0 items-center">
-                  <Link to="/">
-                    <img
-                      className="block h-10 w-auto"
-                      src={pokeball}
-                      alt="Pokeball"
-                    />
-                  </Link>
-                </div>
-                <div className="hidden sm:block">
-                  <div className="flex space-x-4">
-                    {navigation.map((item) => (
-                      <Link
-                        key={item.name}
-                        to={item.to}
-                        className={classNames(
-                          item.current
-                            ? "bg-gray-900 text-white"
-                            : "text-white hover:animate-pulse hover:bg-gray-800 hover:text-white",
-                          "px-3 py-2 rounded-md text-3xl font-semibold",
-                        )}
-                        aria-current={item.current ? "page" : undefined}
-                      >
+                <NavLink
+                  to="/"
+                  className="flex flex-shrink-0 items-center gap-2"
+                >
+                  <img className="h-9 w-auto" src={pokeball} alt="" />
+                  <span className="font-display text-2xl tracking-wide text-white">
+                    Pokédex
+                  </span>
+                </NavLink>
+                <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-2">
+                  {navigation.map((item) => (
+                    <NavLink
+                      key={item.name}
+                      to={item.to}
+                      className={linkClasses}
+                    >
+                      <span className="inline-flex items-center gap-1.5">
                         {item.name}
-                      </Link>
-                    ))}
-                  </div>
+                        {item.name === "Favorites" && favorites.length > 0 && (
+                          <span className="grid h-5 min-w-5 place-items-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
+                            {favorites.length}
+                          </span>
+                        )}
+                      </span>
+                    </NavLink>
+                  ))}
                 </div>
               </div>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                {/* Notification */}
-                <Menu as="div" className="relative ml-3">
-                  <div>
-                    <Menu.Button
-                      as="button"
-                      className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-600 focus:ring-offset-2 focus:ring-offset-gray-800"
-                    >
-                      <span className="sr-only">View notifications</span>
-                      <BellIcon className="h-6 w-6" aria-hidden="true" />
-                    </Menu.Button>
-                  </div>
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
-                  >
-                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <Menu.Item>
-                        <p className="py-2 px-4 text-sm text-gray-700">
-                          Welcome to version 2.0 of the Pokedex app! Global
-                          search is live!
-                        </p>
-                      </Menu.Item>
-                    </Menu.Items>
-                  </Transition>
-                </Menu>
+
+              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:pr-0">
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  aria-label={
+                    theme === "dark"
+                      ? "Switch to light mode"
+                      : "Switch to dark mode"
+                  }
+                  className="rounded-full p-2 text-slate-300 transition-colors hover:bg-slate-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-slate-600"
+                >
+                  {theme === "dark" ? (
+                    <SunIcon className="h-5 w-5" aria-hidden="true" />
+                  ) : (
+                    <MoonIcon className="h-5 w-5" aria-hidden="true" />
+                  )}
+                </button>
               </div>
             </div>
           </div>
 
           <Disclosure.Panel className="sm:hidden">
-            <div className="space-y-1 px-2 pt-2 pb-3">
+            <div className="space-y-1 px-2 pb-3 pt-2">
               {navigation.map((item) => (
                 <Disclosure.Button
                   key={item.name}
-                  as={Link}
+                  as={NavLink}
                   to={item.to}
-                  className={classNames(
-                    item.current
-                      ? "bg-gray-900 text-white"
-                      : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                    "block px-3 py-2 rounded-md text-base font-medium",
-                  )}
-                  aria-current={item.current ? "page" : undefined}
+                  className={({ isActive }: { isActive: boolean }) =>
+                    [
+                      "block rounded-md px-3 py-2 text-base font-medium",
+                      isActive
+                        ? "bg-slate-700 text-white"
+                        : "text-slate-300 hover:bg-slate-700 hover:text-white",
+                    ].join(" ")
+                  }
                 >
                   {item.name}
+                  {item.name === "Favorites" && favorites.length > 0
+                    ? ` (${favorites.length})`
+                    : ""}
                 </Disclosure.Button>
               ))}
             </div>
