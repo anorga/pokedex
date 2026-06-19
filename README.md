@@ -1,74 +1,66 @@
-# Pokedex Web Application
+# Pokédex Web Application
 
-WORK IN PROGRESS
+A Pokémon Pokédex web application built with React 19, TypeScript, and Vite,
+backed by data from the [PokéAPI](https://pokeapi.co/). Styling is handled with
+Tailwind CSS v4 and routing with React Router. Data fetching, caching, and
+search are powered by TanStack Query.
 
-A Pokémon Pokédex web application developed using React, integrated with data from the PokeAPI. The application is styled with Tailwind UI and incorporates React-Router. 
+Hosted on: [https://pokedex-navy-delta.vercel.app](https://pokedex-navy-delta.vercel.app)
 
-Hosted on: [https://pokedex-anorga.vercel.app/](https://pokedex-navy-delta.vercel.app)
+## Tech stack
 
-## Available Scripts
+- **React 19** + **TypeScript**
+- **Vite** — dev server and build tooling
+- **Tailwind CSS v4** — styling (via `@tailwindcss/vite`)
+- **TanStack Query** — server-state fetching, caching, and search
+- **React Router** — client-side routing
+- **Vitest** + **Testing Library** — unit and component tests
+- **ESLint** (flat config) + **Prettier** — linting and formatting
 
-In the project directory, you can run:
+## Getting started
 
-### `npm start`
+Install dependencies:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```bash
+npm install
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Available scripts
 
-### `npm test`
+### `npm run dev`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Starts the Vite dev server with hot module replacement at
+[http://localhost:3000](http://localhost:3000).
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Type-checks the project (`tsc -b`) and produces an optimized production build in
+the `dist/` folder.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### `npm run preview`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Serves the production build locally for a final smoke test.
 
-### `npm run eject`
+### `npm test`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Runs the test suite with Vitest.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### `npm run lint`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Lints the project with ESLint.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### `npm run format`
 
-## Learn More
+Formats the codebase with Prettier.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Project structure
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+src/
+  api/         PokéAPI client (native fetch)
+  components/  UI components
+  hooks/       TanStack Query hooks + utilities
+  types/       Shared TypeScript types
+  utils/       Small helpers
+  main.tsx     App entry (providers + router)
+```

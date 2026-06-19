@@ -1,15 +1,18 @@
-import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import pokeball from "./assets/pokeball.png";
+import { Fragment } from "react";
 import { Link } from "react-router-dom";
+import pokeball from "../assets/pokeball.png";
 
-const navigation = [
-  { name: "Home", to: "/", current: false },
-  // { name: "Favorites", to: "/favorites", current: false },
-];
+interface NavItem {
+  name: string;
+  to: string;
+  current: boolean;
+}
 
-function classNames(...classes) {
+const navigation: NavItem[] = [{ name: "Home", to: "/", current: false }];
+
+function classNames(...classes: Array<string | false | undefined>): string {
   return classes.filter(Boolean).join(" ");
 }
 
@@ -33,14 +36,9 @@ export default function Nav() {
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
-                  <Link reloadDocument to="/">
+                  <Link to="/">
                     <img
-                      className="block h-10 w-auto lg:hidden"
-                      src={pokeball}
-                      alt="Pokeball"
-                    />
-                    <img
-                      className="hidden h-10 w-auto lg:block"
+                      className="block h-10 w-auto"
                       src={pokeball}
                       alt="Pokeball"
                     />
@@ -50,14 +48,13 @@ export default function Nav() {
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
                       <Link
-                        reloadDocument
                         key={item.name}
                         to={item.to}
                         className={classNames(
                           item.current
                             ? "bg-gray-900 text-white"
                             : "text-white hover:animate-pulse hover:bg-gray-800 hover:text-white",
-                          "px-3 py-2 rounded-md text-3xl font-semibold"
+                          "px-3 py-2 rounded-md text-3xl font-semibold",
                         )}
                         aria-current={item.current ? "page" : undefined}
                       >
@@ -91,7 +88,8 @@ export default function Nav() {
                     <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       <Menu.Item>
                         <p className="py-2 px-4 text-sm text-gray-700">
-                          Welcome to version 2.0 of the Pokedex app! Global search is live!
+                          Welcome to version 2.0 of the Pokedex app! Global
+                          search is live!
                         </p>
                       </Menu.Item>
                     </Menu.Items>
@@ -106,13 +104,13 @@ export default function Nav() {
               {navigation.map((item) => (
                 <Disclosure.Button
                   key={item.name}
-                  as="a"
-                  href={item.to}
+                  as={Link}
+                  to={item.to}
                   className={classNames(
                     item.current
                       ? "bg-gray-900 text-white"
                       : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                    "block px-3 py-2 rounded-md text-base font-medium"
+                    "block px-3 py-2 rounded-md text-base font-medium",
                   )}
                   aria-current={item.current ? "page" : undefined}
                 >

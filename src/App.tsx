@@ -1,8 +1,8 @@
-import Nav from "./components/Nav";
-import Pokedex from "./components/Pokedex";
-import Pokemon from "./components/Pokemon";
-import Footer from "./components/Footer";
 import { Routes, Route } from "react-router-dom";
+import Nav from "./components/Nav.tsx";
+import Pokedex from "./components/Pokedex.tsx";
+import Pokemon from "./components/Pokemon.tsx";
+import Footer from "./components/Footer.tsx";
 
 function App() {
   return (
