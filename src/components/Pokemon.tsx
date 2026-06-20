@@ -1,9 +1,12 @@
-import { Link, useParams } from "react-router-dom";
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
-import { usePokemonDetail } from "../hooks/usePokemon";
+import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { ArrowLeftIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import { usePokemonDetail, useSpecies } from "../hooks/usePokemon";
 import {
   capitalize,
+  cleanFlavorText,
   formatDexId,
+  formatGender,
   formatHeight,
   formatWeight,
   statLabel,
@@ -11,9 +14,28 @@ import {
 } from "../utils/format";
 import { typeColor, typeGradient } from "../utils/pokemonTypes";
 import type { Pokemon as PokemonModel } from "../types/pokemon";
+import EvolutionChain from "./EvolutionChain.tsx";
 import FavoriteButton from "./FavoriteButton.tsx";
 import PokemonImage from "./PokemonImage.tsx";
 import TypeBadge from "./TypeBadge.tsx";
+import TypeEffectiveness from "./TypeEffectiveness.tsx";
+
+function Section({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section>
+      <h2 className="mb-3 text-lg font-bold text-slate-800 dark:text-slate-100">
+        {title}
+      </h2>
+      {children}
+    </section>
+  );
+}
 
 const MAX_STAT = 255;
 
@@ -59,18 +81,44 @@ function InfoTile({ label, value }: { label: string; value: string }) {
 }
 
 function DetailView({ pokemon }: { pokemon: PokemonModel }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [shiny, setShiny] = useState(false);
+  const from = (location.state as { from?: string } | null)?.from;
   const primaryType = pokemon.types[0]?.type.name ?? "normal";
+  const typeNames = pokemon.types.map((t) => t.type.name);
   const total = pokemon.stats.reduce((sum, s) => sum + s.base_stat, 0);
+
+  const { data: species } = useSpecies(pokemon.id);
+  const flavor = species?.flavor_text_entries.find(
+    (e) => e.language.name === "en",
+  )?.flavor_text;
+  const genus = species?.genera.find((g) => g.language.name === "en")?.genus;
+
+  useEffect(() => {
+    document.title = `${capitalize(pokemon.name)} · Pokédex`;
+    return () => {
+      document.title = "Pokédex";
+    };
+  }, [pokemon.name]);
+
+  // If we arrived from a list, step back in history so its exact page/filter
+  // and scroll position are restored; otherwise fall back to the root.
+  const goBack = () => {
+    if (from) navigate(-1);
+    else navigate("/");
+  };
 
   return (
     <div className="animate-fade-in mx-auto max-w-3xl px-4 py-8 sm:px-6">
-      <Link
-        to="/"
+      <button
+        type="button"
+        onClick={goBack}
         className="mb-6 inline-flex items-center gap-1.5 text-sm font-semibold text-slate-500 transition-colors hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100"
       >
         <ArrowLeftIcon className="h-4 w-4" />
         Back to Pokédex
-      </Link>
+      </button>
 
       <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800">
         {/* Hero */}
@@ -78,22 +126,39 @@ function DetailView({ pokemon }: { pokemon: PokemonModel }) {
           className="relative flex flex-col items-center px-6 pb-4 pt-8"
           style={{ background: typeGradient(primaryType) }}
         >
-          <FavoriteButton
-            id={pokemon.id}
-            className="absolute right-4 top-4"
-            iconClass="h-6 w-6"
-          />
+          <div className="absolute right-4 top-4 flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setShiny((s) => !s)}
+              aria-pressed={shiny}
+              aria-label="Toggle shiny artwork"
+              title="Toggle shiny"
+              className={`grid place-items-center rounded-full bg-white/80 p-1.5 shadow-sm backdrop-blur-sm transition hover:scale-110 dark:bg-slate-900/70 ${
+                shiny ? "text-amber-400" : "text-slate-400 dark:text-slate-300"
+              }`}
+            >
+              <SparklesIcon className="h-6 w-6" aria-hidden="true" />
+            </button>
+            <FavoriteButton id={pokemon.id} iconClass="h-6 w-6" />
+          </div>
           <span className="text-sm font-bold tracking-widest text-slate-400 dark:text-slate-500">
             {formatDexId(pokemon.id)}
           </span>
           <PokemonImage
             id={pokemon.id}
             name={pokemon.name}
+            shiny={shiny}
+            transitionName={shiny ? undefined : `poke-${pokemon.id}`}
             className="my-2 h-48 w-48 object-contain drop-shadow-xl"
           />
           <h1 className="text-3xl font-extrabold text-slate-800 dark:text-slate-50">
             {capitalize(pokemon.name)}
           </h1>
+          {genus && (
+            <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+              {genus}
+            </p>
+          )}
           <div className="mt-3 flex flex-wrap justify-center gap-2">
             {pokemon.types.map((t) => (
               <TypeBadge key={t.type.name} type={t.type.name} size="md" />
@@ -103,19 +168,22 @@ function DetailView({ pokemon }: { pokemon: PokemonModel }) {
 
         {/* Body */}
         <div className="space-y-8 px-6 py-8 sm:px-8">
+          {flavor && (
+            <p className="text-center text-base leading-relaxed text-slate-600 dark:text-slate-300">
+              {cleanFlavorText(flavor)}
+            </p>
+          )}
+
           <div className="grid grid-cols-3 gap-3">
             <InfoTile label="Height" value={formatHeight(pokemon.height)} />
             <InfoTile label="Weight" value={formatWeight(pokemon.weight)} />
             <InfoTile
-              label="Abilities"
-              value={String(pokemon.abilities.length)}
+              label="Gender"
+              value={species ? formatGender(species.gender_rate) : "—"}
             />
           </div>
 
-          <section>
-            <h2 className="mb-3 text-lg font-bold text-slate-800 dark:text-slate-100">
-              Abilities
-            </h2>
+          <Section title="Abilities">
             <div className="flex flex-wrap gap-2">
               {pokemon.abilities.map((a) => (
                 <span
@@ -129,7 +197,11 @@ function DetailView({ pokemon }: { pokemon: PokemonModel }) {
                 </span>
               ))}
             </div>
-          </section>
+          </Section>
+
+          <Section title="Type Defenses">
+            <TypeEffectiveness types={typeNames} />
+          </Section>
 
           <section>
             <div className="mb-4 flex items-baseline justify-between">
@@ -156,6 +228,13 @@ function DetailView({ pokemon }: { pokemon: PokemonModel }) {
               ))}
             </div>
           </section>
+
+          <Section title="Evolution">
+            <EvolutionChain
+              evolutionUrl={species?.evolution_chain.url}
+              currentId={pokemon.id}
+            />
+          </Section>
         </div>
       </div>
     </div>

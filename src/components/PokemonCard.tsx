@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import type { Pokemon } from "../types/pokemon";
 import { capitalize, formatDexId } from "../utils/format";
 import { typeGradient } from "../utils/pokemonTypes";
@@ -33,6 +33,9 @@ function PokemonCard({
   emptyTitle = "No Pokémon found",
   emptyHint = "Try another search term",
 }: PokemonCardProps) {
+  const location = useLocation();
+  const from = `${location.pathname}${location.search}`;
+
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div className="grid min-h-[60vh] auto-rows-min grid-cols-2 gap-4 py-2 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5">
@@ -52,6 +55,8 @@ function PokemonCard({
               <Link
                 key={p.id}
                 to={`/${p.id}`}
+                state={{ from }}
+                viewTransition
                 className="group animate-fade-in relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-700 dark:bg-slate-800"
               >
                 <FavoriteButton
@@ -69,6 +74,7 @@ function PokemonCard({
                   <PokemonImage
                     id={p.id}
                     name={p.name}
+                    transitionName={`poke-${p.id}`}
                     className="h-28 w-28 object-contain drop-shadow-md transition-transform duration-200 group-hover:scale-110"
                   />
                 </div>

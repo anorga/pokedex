@@ -3,6 +3,7 @@ import Nav from "./components/Nav.tsx";
 import Pokedex from "./components/Pokedex.tsx";
 import Pokemon from "./components/Pokemon.tsx";
 import Favorites from "./components/Favorites.tsx";
+import Compare from "./components/Compare.tsx";
 import Footer from "./components/Footer.tsx";
 import ErrorBoundary from "./components/ErrorBoundary.tsx";
 import ScrollToTop from "./components/ScrollToTop.tsx";
@@ -17,6 +18,7 @@ function App() {
           <Routes>
             <Route index path="/" element={<Pokedex />} />
             <Route path="/favorites" element={<Favorites />} />
+            <Route path="/compare" element={<Compare />} />
             <Route path=":pokemonId" element={<Pokemon />} />
           </Routes>
         </ErrorBoundary>

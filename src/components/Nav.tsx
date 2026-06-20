@@ -17,6 +17,7 @@ interface NavItem {
 
 const navigation: NavItem[] = [
   { name: "Home", to: "/" },
+  { name: "Compare", to: "/compare" },
   { name: "Favorites", to: "/favorites" },
 ];
 

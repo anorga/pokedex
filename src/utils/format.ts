@@ -36,3 +36,19 @@ export function formatHeight(decimetres: number): string {
 export function formatWeight(hectograms: number): string {
   return `${(hectograms / 10).toFixed(1)} kg`;
 }
+
+/** Strip the control characters PokeAPI embeds in flavor text. */
+export function cleanFlavorText(text: string): string {
+  return text
+    .replace(/[\f\n\r­]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/** Human-readable gender split from a PokeAPI gender_rate (eighths female). */
+export function formatGender(genderRate: number): string {
+  if (genderRate < 0) return "Genderless";
+  const female = (genderRate / 8) * 100;
+  const male = 100 - female;
+  return `♂ ${male}%  ♀ ${female}%`;
+}

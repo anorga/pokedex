@@ -29,6 +29,43 @@ export interface PokemonAbility {
   slot: number;
 }
 
+export interface DamageRelations {
+  double_damage_from: NamedApiResource[];
+  half_damage_from: NamedApiResource[];
+  no_damage_from: NamedApiResource[];
+}
+
+export interface TypeResponse {
+  pokemon: { pokemon: NamedApiResource; slot: number }[];
+  damage_relations: DamageRelations;
+}
+
+export interface SpeciesResponse {
+  flavor_text_entries: {
+    flavor_text: string;
+    language: NamedApiResource;
+    version: NamedApiResource;
+  }[];
+  genera: { genus: string; language: NamedApiResource }[];
+  gender_rate: number;
+  evolution_chain: { url: string };
+}
+
+export interface ChainLink {
+  species: NamedApiResource;
+  evolves_to: ChainLink[];
+}
+
+export interface EvolutionChainResponse {
+  chain: ChainLink;
+}
+
+/** A single resolved evolution stage. */
+export interface EvolutionStage {
+  id: number;
+  name: string;
+}
+
 export interface Pokemon {
   id: number;
   name: string;

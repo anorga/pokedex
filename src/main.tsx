@@ -11,10 +11,13 @@ import "./index.css";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000,
+      // Pokémon data is immutable, so never refetch within the persisted
+      // window — served from memory, then localStorage, before the network.
+      staleTime: Infinity,
       gcTime: 24 * 60 * 60 * 1000,
       retry: 1,
       refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
     },
   },
 });
@@ -23,6 +26,10 @@ const persister = createSyncStoragePersister({
   storage: window.localStorage,
   key: "pokedex:query-cache",
 });
+
+// Injected by Vite — unique per build, so every deploy automatically discards
+// stale persisted caches instead of serving mis-shaped data.
+const CACHE_VERSION = __CACHE_BUSTER__;
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -33,7 +40,11 @@ createRoot(rootElement).render(
   <StrictMode>
     <PersistQueryClientProvider
       client={queryClient}
-      persistOptions={{ persister, maxAge: 24 * 60 * 60 * 1000 }}
+      persistOptions={{
+        persister,
+        maxAge: 24 * 60 * 60 * 1000,
+        buster: CACHE_VERSION,
+      }}
     >
       <FavoritesProvider>
         <BrowserRouter>

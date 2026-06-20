@@ -52,3 +52,20 @@ body {
 .animate-fade-in {
   animation: fade-in 0.35s ease-out both;
 }
+
+/* View-transition morph (card → detail) */
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-duration: 0.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in {
+    animation: none;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

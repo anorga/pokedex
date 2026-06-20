@@ -1,13 +1,20 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigationType } from "react-router-dom";
 
-/** Scrolls to the top of the page on every route change. */
+/**
+ * Scrolls to the top on forward navigation (PUSH/REPLACE), but leaves the
+ * scroll position alone on back/forward (POP) so returning to a list restores
+ * where the user was.
+ */
 function ScrollToTop() {
   const { pathname } = useLocation();
+  const navigationType = useNavigationType();
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
-  }, [pathname]);
+    if (navigationType !== "POP") {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+  }, [pathname, navigationType]);
 
   return null;
 }
