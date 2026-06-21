@@ -7,11 +7,13 @@ import Compare from "./components/Compare.tsx";
 import Footer from "./components/Footer.tsx";
 import ErrorBoundary from "./components/ErrorBoundary.tsx";
 import ScrollToTop from "./components/ScrollToTop.tsx";
+import CommandPalette from "./components/CommandPalette.tsx";
 
 function App() {
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-900">
       <ScrollToTop />
+      <CommandPalette />
       <Nav />
       <main className="flex-1">
         <ErrorBoundary>

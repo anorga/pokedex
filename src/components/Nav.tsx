@@ -1,6 +1,7 @@
 import { Disclosure } from "@headlessui/react";
 import {
   Bars3Icon,
+  MagnifyingGlassIcon,
   MoonIcon,
   SunIcon,
   XMarkIcon,
@@ -9,6 +10,8 @@ import { NavLink } from "react-router-dom";
 import pokeball from "../assets/pokeball.png";
 import { useTheme } from "../hooks/useTheme";
 import { useFavorites } from "../hooks/useFavorites";
+import { OPEN_COMMAND_PALETTE } from "./CommandPalette.tsx";
+import RandomButton from "./RandomButton.tsx";
 
 interface NavItem {
   name: string;
@@ -84,7 +87,21 @@ export default function Nav() {
                 </div>
               </div>
 
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:pr-0">
+              <div className="absolute inset-y-0 right-0 flex items-center gap-1 pr-2 sm:static sm:pr-0">
+                <button
+                  type="button"
+                  onClick={() =>
+                    window.dispatchEvent(new Event(OPEN_COMMAND_PALETTE))
+                  }
+                  aria-label="Open search"
+                  className="flex items-center gap-2 rounded-full p-2 text-slate-300 transition-colors hover:bg-slate-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-slate-600 sm:bg-slate-800/60 sm:px-3"
+                >
+                  <MagnifyingGlassIcon className="h-5 w-5" aria-hidden="true" />
+                  <kbd className="hidden text-xs font-semibold text-slate-400 sm:inline">
+                    ⌘K
+                  </kbd>
+                </button>
+                <RandomButton />
                 <button
                   type="button"
                   onClick={toggleTheme}

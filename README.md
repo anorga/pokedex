@@ -1,66 +1,52 @@
-# Pokédex Web Application
+# Pokédex
 
-A Pokémon Pokédex web application built with React 19, TypeScript, and Vite,
-backed by data from the [PokéAPI](https://pokeapi.co/). Styling is handled with
-Tailwind CSS v4 and routing with React Router. Data fetching, caching, and
-search are powered by TanStack Query.
+A fast, installable Pokédex built with React 19, TypeScript, and Vite, powered by the [PokéAPI](https://pokeapi.co/).
 
-Hosted on: [https://pokedex-navy-delta.vercel.app](https://pokedex-navy-delta.vercel.app)
+**Live demo:** [pokedex-navy-delta.vercel.app](https://pokedex-navy-delta.vercel.app)
+
+## Features
+
+- Browse all 1,000+ Pokémon with paginated, cached loading
+- Global search by name (debounced)
+- Filter by type and generation, sort by number or name
+- Command palette (`⌘K` / `Ctrl+K`) for quick jump
+- Random Pokémon button
+- Detail pages: stats (bars + radar chart), type matchups, evolution chain, abilities, flavor text, shiny toggle
+- Compare up to 4 Pokémon side by side
+- Favorites, saved locally
+- Shareable, bookmarkable URLs for every view
+- Light / dark mode
+- Installable PWA with offline support
 
 ## Tech stack
 
-- **React 19** + **TypeScript**
-- **Vite** — dev server and build tooling
-- **Tailwind CSS v4** — styling (via `@tailwindcss/vite`)
-- **TanStack Query** — server-state fetching, caching, and search
-- **React Router** — client-side routing
-- **Vitest** + **Testing Library** — unit and component tests
-- **ESLint** (flat config) + **Prettier** — linting and formatting
+- React 19 + TypeScript
+- Vite
+- Tailwind CSS v4
+- TanStack Query (with localStorage persistence)
+- React Router
+- Vitest + Testing Library
+- ESLint + Prettier
 
-## Getting started
-
-Install dependencies:
+## Scripts
 
 ```bash
-npm install
+npm run dev      # start dev server (http://localhost:3000)
+npm run build    # type-check + production build
+npm run preview  # preview the production build
+npm test         # run tests
+npm run lint     # lint
+npm run format   # format
 ```
-
-## Available scripts
-
-### `npm run dev`
-
-Starts the Vite dev server with hot module replacement at
-[http://localhost:3000](http://localhost:3000).
-
-### `npm run build`
-
-Type-checks the project (`tsc -b`) and produces an optimized production build in
-the `dist/` folder.
-
-### `npm run preview`
-
-Serves the production build locally for a final smoke test.
-
-### `npm test`
-
-Runs the test suite with Vitest.
-
-### `npm run lint`
-
-Lints the project with ESLint.
-
-### `npm run format`
-
-Formats the codebase with Prettier.
 
 ## Project structure
 
 ```
 src/
-  api/         PokéAPI client (native fetch)
+  api/         PokéAPI client
   components/  UI components
-  hooks/       TanStack Query hooks + utilities
-  types/       Shared TypeScript types
-  utils/       Small helpers
-  main.tsx     App entry (providers + router)
+  context/     Favorites provider
+  hooks/       Data + utility hooks
+  types/       Shared types
+  utils/       Helpers (formatting, types, generations, sort)
 ```

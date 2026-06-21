@@ -17,6 +17,7 @@ import type { Pokemon as PokemonModel } from "../types/pokemon";
 import EvolutionChain from "./EvolutionChain.tsx";
 import FavoriteButton from "./FavoriteButton.tsx";
 import PokemonImage from "./PokemonImage.tsx";
+import StatRadar from "./StatRadar.tsx";
 import TypeBadge from "./TypeBadge.tsx";
 import TypeEffectiveness from "./TypeEffectiveness.tsx";
 
@@ -218,14 +219,24 @@ function DetailView({ pokemon }: { pokemon: PokemonModel }) {
                 </span>
               </span>
             </div>
-            <div className="space-y-3">
-              {pokemon.stats.map((s) => (
-                <StatBar
-                  key={s.stat.name}
-                  name={s.stat.name}
-                  value={s.base_stat}
-                />
-              ))}
+            <div className="md:flex md:items-center md:gap-8">
+              <StatRadar
+                stats={pokemon.stats.map((s) => ({
+                  name: s.stat.name,
+                  value: s.base_stat,
+                }))}
+                color={typeColor(primaryType)}
+                className="mx-auto h-56 w-56 shrink-0"
+              />
+              <div className="flex-1 space-y-3">
+                {pokemon.stats.map((s) => (
+                  <StatBar
+                    key={s.stat.name}
+                    name={s.stat.name}
+                    value={s.base_stat}
+                  />
+                ))}
+              </div>
             </div>
           </section>
 
