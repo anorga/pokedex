@@ -1,4 +1,4 @@
-import type { CSSProperties, MouseEvent } from "react";
+import type { CSSProperties, PointerEvent } from "react";
 import { Link } from "react-router-dom";
 import type { Pokemon } from "../types/pokemon";
 import { capitalize, formatDexId } from "../utils/format";
@@ -19,8 +19,11 @@ const prefersReducedMotion = () =>
 function PokemonGridCard({ pokemon, from, index }: PokemonGridCardProps) {
   const primaryType = pokemon.types[0]?.type.name ?? "normal";
 
-  const handleMove = (e: MouseEvent<HTMLAnchorElement>) => {
-    if (prefersReducedMotion()) return;
+  // Pointer events (not mouse events) so the tilt works for a mouse, trackpad,
+  // and Apple Pencil hover on Safari/iPadOS. Touch is skipped so scrolling
+  // never tilts a card.
+  const handleMove = (e: PointerEvent<HTMLAnchorElement>) => {
+    if (e.pointerType === "touch" || prefersReducedMotion()) return;
     const el = e.currentTarget;
     const rect = el.getBoundingClientRect();
     const px = (e.clientX - rect.left) / rect.width - 0.5;
@@ -28,7 +31,7 @@ function PokemonGridCard({ pokemon, from, index }: PokemonGridCardProps) {
     el.style.transform = `perspective(700px) rotateX(${(-py * 5).toFixed(2)}deg) rotateY(${(px * 5).toFixed(2)}deg) translateY(-4px)`;
   };
 
-  const handleLeave = (e: MouseEvent<HTMLAnchorElement>) => {
+  const handleLeave = (e: PointerEvent<HTMLAnchorElement>) => {
     e.currentTarget.style.transform = "";
   };
 
@@ -47,8 +50,9 @@ function PokemonGridCard({ pokemon, from, index }: PokemonGridCardProps) {
       to={`/${pokemon.id}`}
       state={{ from }}
       viewTransition
-      onMouseMove={handleMove}
-      onMouseLeave={handleLeave}
+      onPointerMove={handleMove}
+      onPointerLeave={handleLeave}
+      onPointerCancel={handleLeave}
       style={linkStyle}
       className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-[transform,box-shadow] duration-200 [transform-style:preserve-3d] hover:shadow-[0_16px_40px_-12px_var(--glow)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-700 dark:bg-slate-800"
     >
