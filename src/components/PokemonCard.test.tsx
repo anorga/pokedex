@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import PokemonCard from "./PokemonCard";
 import { FavoritesProvider } from "../context/FavoritesProvider";
+import { ToastProvider } from "../context/ToastProvider";
 import type { Pokemon } from "../types/pokemon";
 
 const bulbasaur: Pokemon = {
@@ -21,7 +22,9 @@ function renderCard(props: Partial<Parameters<typeof PokemonCard>[0]> = {}) {
   return render(
     <MemoryRouter>
       <FavoritesProvider>
-        <PokemonCard pokemon={[]} isLoading={false} {...props} />
+        <ToastProvider>
+          <PokemonCard pokemon={[]} isLoading={false} {...props} />
+        </ToastProvider>
       </FavoritesProvider>
     </MemoryRouter>,
   );

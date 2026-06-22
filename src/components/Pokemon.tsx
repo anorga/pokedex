@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeftIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import { artworkUrl } from "../api/pokeapi";
 import { usePokemonDetail, useSpecies } from "../hooks/usePokemon";
+import { useCountUp } from "../hooks/useCountUp";
 import {
   capitalize,
   cleanFlavorText,
@@ -47,19 +49,20 @@ function statBarColor(value: number): string {
 }
 
 function StatBar({ name, value }: { name: string; value: number }) {
+  const display = useCountUp(value);
   return (
     <div className="grid grid-cols-[5rem_2.5rem_1fr] items-center gap-3">
       <span className="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
         {statLabel(name)}
       </span>
       <span className="text-right text-sm font-bold tabular-nums text-slate-800 dark:text-slate-100">
-        {value}
+        {display}
       </span>
       <div className="h-2.5 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
         <div
-          className="h-full rounded-full transition-[width] duration-700 ease-out"
+          className="h-full rounded-full"
           style={{
-            width: `${Math.min(100, (value / MAX_STAT) * 100)}%`,
+            width: `${Math.min(100, (display / MAX_STAT) * 100)}%`,
             backgroundColor: statBarColor(value),
           }}
         />
@@ -89,6 +92,7 @@ function DetailView({ pokemon }: { pokemon: PokemonModel }) {
   const primaryType = pokemon.types[0]?.type.name ?? "normal";
   const typeNames = pokemon.types.map((t) => t.type.name);
   const total = pokemon.stats.reduce((sum, s) => sum + s.base_stat, 0);
+  const totalDisplay = useCountUp(total);
 
   const { data: species } = useSpecies(pokemon.id);
   const flavor = species?.flavor_text_entries.find(
@@ -124,10 +128,16 @@ function DetailView({ pokemon }: { pokemon: PokemonModel }) {
       <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800">
         {/* Hero */}
         <div
-          className="relative flex flex-col items-center px-6 pb-4 pt-8"
+          className="relative flex flex-col items-center overflow-hidden px-6 pb-4 pt-8"
           style={{ background: typeGradient(primaryType) }}
         >
-          <div className="absolute right-4 top-4 flex items-center gap-1.5">
+          <img
+            src={artworkUrl(pokemon.id)}
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-10 left-1/2 z-0 h-72 w-72 -translate-x-1/2 select-none object-contain opacity-20 blur-2xl"
+          />
+          <div className="absolute right-4 top-4 z-20 flex items-center gap-1.5">
             <button
               type="button"
               onClick={() => setShiny((s) => !s)}
@@ -142,28 +152,30 @@ function DetailView({ pokemon }: { pokemon: PokemonModel }) {
             </button>
             <FavoriteButton id={pokemon.id} iconClass="h-6 w-6" />
           </div>
-          <span className="text-sm font-bold tracking-widest text-slate-400 dark:text-slate-500">
-            {formatDexId(pokemon.id)}
-          </span>
-          <PokemonImage
-            id={pokemon.id}
-            name={pokemon.name}
-            shiny={shiny}
-            transitionName={shiny ? undefined : `poke-${pokemon.id}`}
-            className="my-2 h-48 w-48 object-contain drop-shadow-xl"
-          />
-          <h1 className="text-3xl font-extrabold text-slate-800 dark:text-slate-50">
-            {capitalize(pokemon.name)}
-          </h1>
-          {genus && (
-            <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-              {genus}
-            </p>
-          )}
-          <div className="mt-3 flex flex-wrap justify-center gap-2">
-            {pokemon.types.map((t) => (
-              <TypeBadge key={t.type.name} type={t.type.name} size="md" />
-            ))}
+          <div className="relative z-10 flex w-full flex-col items-center">
+            <span className="text-sm font-bold tracking-widest text-slate-400 dark:text-slate-500">
+              {formatDexId(pokemon.id)}
+            </span>
+            <PokemonImage
+              id={pokemon.id}
+              name={pokemon.name}
+              shiny={shiny}
+              transitionName={shiny ? undefined : `poke-${pokemon.id}`}
+              className="my-2 h-48 w-48 object-contain drop-shadow-xl"
+            />
+            <h1 className="text-3xl font-extrabold text-slate-800 dark:text-slate-50">
+              {capitalize(pokemon.name)}
+            </h1>
+            {genus && (
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                {genus}
+              </p>
+            )}
+            <div className="mt-3 flex flex-wrap justify-center gap-2">
+              {pokemon.types.map((t) => (
+                <TypeBadge key={t.type.name} type={t.type.name} size="md" />
+              ))}
+            </div>
           </div>
         </div>
 
@@ -215,7 +227,7 @@ function DetailView({ pokemon }: { pokemon: PokemonModel }) {
                   className="font-bold"
                   style={{ color: typeColor(primaryType) }}
                 >
-                  {total}
+                  {totalDisplay}
                 </span>
               </span>
             </div>

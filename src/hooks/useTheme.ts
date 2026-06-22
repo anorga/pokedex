@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
+import { flushSync } from "react-dom";
 
 export type Theme = "light" | "dark";
 
@@ -18,14 +19,22 @@ function getInitialTheme(): Theme {
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
 
-  useEffect(() => {
-    const root = document.documentElement;
-    root.classList.toggle("dark", theme === "dark");
+  // Layout effect so the class is applied synchronously inside the view
+  // transition started by toggleTheme.
+  useLayoutEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
     localStorage.setItem(STORAGE_KEY, theme);
   }, [theme]);
 
-  const toggleTheme = () =>
-    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  const toggleTheme = () => {
+    const next = () => setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+
+    if (document.startViewTransition) {
+      document.startViewTransition(() => flushSync(next));
+    } else {
+      next();
+    }
+  };
 
   return { theme, toggleTheme };
 }

@@ -24,24 +24,45 @@ body {
   font-family: var(--font-display);
 }
 
-@keyframes skeleton-pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.45;
-  }
+/* Shimmer skeletons (gradient sweep) */
+.skeleton {
+  position: relative;
+  overflow: hidden;
 }
 
-.skeleton {
-  animation: skeleton-pulse 1.5s ease-in-out infinite;
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+.dark .skeleton::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 @keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -50,7 +71,26 @@ body {
 }
 
 .animate-fade-in {
-  animation: fade-in 0.35s ease-out both;
+  animation: fade-in 0.4s ease-out both;
+}
+
+/* Indeterminate top progress bar */
+@keyframes progress-slide {
+  0% {
+    left: -45%;
+    width: 45%;
+  }
+  100% {
+    left: 100%;
+    width: 45%;
+  }
+}
+
+.progress-segment {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  animation: progress-slide 1.1s ease-in-out infinite;
 }
 
 /* View-transition morph (card → detail) */
@@ -60,8 +100,16 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-fade-in {
+  .animate-fade-in,
+  .skeleton::after,
+  .progress-segment {
     animation: none;
+  }
+  /* Without the slide animation the segment has no width, so show a static
+     full-width bar instead of an invisible one. */
+  .progress-segment {
+    left: 0;
+    width: 100%;
   }
   ::view-transition-group(*),
   ::view-transition-old(*),

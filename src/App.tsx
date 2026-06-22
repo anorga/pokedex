@@ -8,11 +8,14 @@ import Footer from "./components/Footer.tsx";
 import ErrorBoundary from "./components/ErrorBoundary.tsx";
 import ScrollToTop from "./components/ScrollToTop.tsx";
 import CommandPalette from "./components/CommandPalette.tsx";
+import ProgressBar from "./components/ProgressBar.tsx";
+import BackToTop from "./components/BackToTop.tsx";
 
 function App() {
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-900">
       <ScrollToTop />
+      <ProgressBar />
       <CommandPalette />
       <Nav />
       <main className="flex-1">
@@ -26,6 +29,7 @@ function App() {
         </ErrorBoundary>
       </main>
       <Footer />
+      <BackToTop />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { HeartIcon as HeartOutline } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartSolid } from "@heroicons/react/24/solid";
 import { useFavorites } from "../hooks/useFavorites";
+import { useToast } from "../hooks/useToast";
 
 interface FavoriteButtonProps {
   id: number;
@@ -15,6 +16,7 @@ function FavoriteButton({
   iconClass = "h-6 w-6",
 }: FavoriteButtonProps) {
   const { isFavorite, toggleFavorite } = useFavorites();
+  const { addToast } = useToast();
   const active = isFavorite(id);
 
   return (
@@ -26,6 +28,10 @@ function FavoriteButton({
         e.preventDefault();
         e.stopPropagation();
         toggleFavorite(id);
+        addToast(active ? "Removed from Favorites" : "Added to Favorites", {
+          label: "Undo",
+          onAction: () => toggleFavorite(id),
+        });
       }}
       className={`grid place-items-center rounded-full bg-white/80 p-1.5 text-red-500 shadow-sm backdrop-blur-sm transition-transform hover:scale-110 dark:bg-slate-900/70 ${className}`}
     >
