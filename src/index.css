@@ -51,6 +51,24 @@ body {
   font-family: var(--font-display);
 }
 
+/* Card hover, driven by JS pointer events (class toggled in PokemonGridCard)
+   rather than CSS :hover, so it works with a mouse/Pencil on iPadOS where the
+   hover media queries report `none`. */
+.tilt-card {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.tilt-img {
+  transition: transform 0.2s ease;
+}
+.tilt-card.is-pointer-hover {
+  box-shadow: 0 16px 40px -12px var(--glow);
+}
+.tilt-card.is-pointer-hover .tilt-img {
+  transform: scale(1.1);
+}
+
 /* Shimmer skeletons (gradient sweep) */
 .skeleton {
   position: relative;
