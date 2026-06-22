@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeftIcon, SparklesIcon } from "@heroicons/react/24/outline";
-import { artworkUrl } from "../api/pokeapi";
+import { artworkUrl, shinyArtworkUrl } from "../api/pokeapi";
 import { usePokemonDetail, useSpecies } from "../hooks/usePokemon";
 import { useCountUp } from "../hooks/useCountUp";
 import {
@@ -132,10 +132,10 @@ function DetailView({ pokemon }: { pokemon: PokemonModel }) {
           style={{ background: typeGradient(primaryType) }}
         >
           <img
-            src={artworkUrl(pokemon.id)}
+            src={shiny ? shinyArtworkUrl(pokemon.id) : artworkUrl(pokemon.id)}
             alt=""
             aria-hidden="true"
-            className="pointer-events-none absolute -top-10 left-1/2 z-0 h-72 w-72 -translate-x-1/2 select-none object-contain opacity-20 blur-2xl"
+            className="pointer-events-none absolute -top-10 left-1/2 z-0 h-72 w-72 -translate-x-1/2 select-none object-contain opacity-25 blur-3xl"
           />
           <div className="absolute right-4 top-4 z-20 flex items-center gap-1.5">
             <button
