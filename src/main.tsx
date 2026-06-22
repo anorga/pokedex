@@ -6,6 +6,7 @@ import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import App from "./App.tsx";
 import { FavoritesProvider } from "./context/FavoritesProvider.tsx";
+import { ToastProvider } from "./context/ToastProvider.tsx";
 import "./index.css";
 
 const queryClient = new QueryClient({
@@ -47,9 +48,11 @@ createRoot(rootElement).render(
       }}
     >
       <FavoritesProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <ToastProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ToastProvider>
       </FavoritesProvider>
     </PersistQueryClientProvider>
   </StrictMode>,
