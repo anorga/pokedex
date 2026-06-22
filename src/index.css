@@ -3,6 +3,26 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Tailwind gates hover behind `(hover: hover)`, which iPadOS Safari reports as
+   false even with a trackpad/mouse/Pencil. Re-gate on `(any-hover: hover)` so
+   hover effects work with a pointer on iPad, while still staying off on
+   pure-touch phones (no sticky hover). */
+@custom-variant hover {
+  @media (any-hover: hover) {
+    &:hover {
+      @slot;
+    }
+  }
+}
+
+@custom-variant group-hover {
+  @media (any-hover: hover) {
+    &:is(:where(.group):hover *) {
+      @slot;
+    }
+  }
+}
+
 @theme {
   --font-sans:
     "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
