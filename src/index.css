@@ -56,11 +56,11 @@ body {
    hover media queries report `none`. */
 .tilt-card {
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .tilt-img {
-  transition: transform 0.2s ease;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .tilt-card.is-pointer-hover {
   box-shadow: 0 16px 40px -12px var(--glow);

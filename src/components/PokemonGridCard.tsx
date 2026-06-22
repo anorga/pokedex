@@ -24,11 +24,17 @@ function PokemonGridCard({ pokemon, from, index }: PokemonGridCardProps) {
   // a class here rather than CSS `:hover`, because iPadOS reports `hover: none`
   // / `any-hover: none` and disables CSS hover. Touch is skipped so scrolling
   // never triggers the effect.
-  const handleMove = (e: PointerEvent<HTMLAnchorElement>) => {
+
+  // Activate the highlight on enter (matching CSS `:hover` semantics, which
+  // fire on enter rather than on the first move).
+  const handleEnter = (e: PointerEvent<HTMLAnchorElement>) => {
     if (e.pointerType === "touch") return;
+    e.currentTarget.classList.add("is-pointer-hover");
+  };
+
+  const handleMove = (e: PointerEvent<HTMLAnchorElement>) => {
+    if (e.pointerType === "touch" || prefersReducedMotion()) return;
     const el = e.currentTarget;
-    el.classList.add("is-pointer-hover");
-    if (prefersReducedMotion()) return;
     const rect = el.getBoundingClientRect();
     const px = (e.clientX - rect.left) / rect.width - 0.5;
     const py = (e.clientY - rect.top) / rect.height - 0.5;
@@ -55,11 +61,12 @@ function PokemonGridCard({ pokemon, from, index }: PokemonGridCardProps) {
       to={`/${pokemon.id}`}
       state={{ from }}
       viewTransition
+      onPointerEnter={handleEnter}
       onPointerMove={handleMove}
       onPointerLeave={handleLeave}
       onPointerCancel={handleLeave}
       style={linkStyle}
-      className="tilt-card group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm [transform-style:preserve-3d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-700 dark:bg-slate-800"
+      className="tilt-card relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm [transform-style:preserve-3d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-700 dark:bg-slate-800"
     >
       <div className="animate-fade-in flex flex-1 flex-col" style={innerStyle}>
         <FavoriteButton
