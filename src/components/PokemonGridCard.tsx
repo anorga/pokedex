@@ -19,12 +19,16 @@ const prefersReducedMotion = () =>
 function PokemonGridCard({ pokemon, from, index }: PokemonGridCardProps) {
   const primaryType = pokemon.types[0]?.type.name ?? "normal";
 
-  // Pointer events (not mouse events) so the tilt works for a mouse, trackpad,
-  // and Apple Pencil hover on Safari/iPadOS. Touch is skipped so scrolling
-  // never tilts a card.
+  // Pointer events (not mouse events) so hover works for a mouse, trackpad, and
+  // Apple Pencil hover on Safari/iPadOS. The glow + image zoom are toggled via
+  // a class here rather than CSS `:hover`, because iPadOS reports `hover: none`
+  // / `any-hover: none` and disables CSS hover. Touch is skipped so scrolling
+  // never triggers the effect.
   const handleMove = (e: PointerEvent<HTMLAnchorElement>) => {
-    if (e.pointerType === "touch" || prefersReducedMotion()) return;
+    if (e.pointerType === "touch") return;
     const el = e.currentTarget;
+    el.classList.add("is-pointer-hover");
+    if (prefersReducedMotion()) return;
     const rect = el.getBoundingClientRect();
     const px = (e.clientX - rect.left) / rect.width - 0.5;
     const py = (e.clientY - rect.top) / rect.height - 0.5;
@@ -32,6 +36,7 @@ function PokemonGridCard({ pokemon, from, index }: PokemonGridCardProps) {
   };
 
   const handleLeave = (e: PointerEvent<HTMLAnchorElement>) => {
+    e.currentTarget.classList.remove("is-pointer-hover");
     e.currentTarget.style.transform = "";
   };
 
@@ -54,7 +59,7 @@ function PokemonGridCard({ pokemon, from, index }: PokemonGridCardProps) {
       onPointerLeave={handleLeave}
       onPointerCancel={handleLeave}
       style={linkStyle}
-      className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-[transform,box-shadow] duration-200 [transform-style:preserve-3d] hover:shadow-[0_16px_40px_-12px_var(--glow)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-700 dark:bg-slate-800"
+      className="tilt-card group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm [transform-style:preserve-3d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-700 dark:bg-slate-800"
     >
       <div className="animate-fade-in flex flex-1 flex-col" style={innerStyle}>
         <FavoriteButton
@@ -79,7 +84,7 @@ function PokemonGridCard({ pokemon, from, index }: PokemonGridCardProps) {
             id={pokemon.id}
             name={pokemon.name}
             transitionName={`poke-${pokemon.id}`}
-            className="relative z-10 h-28 w-28 object-contain drop-shadow-md transition-transform duration-200 group-hover:scale-110"
+            className="tilt-img relative z-10 h-28 w-28 object-contain drop-shadow-md"
           />
         </div>
         <div className="flex flex-1 flex-col items-center gap-2 px-3 pb-4 pt-2">
