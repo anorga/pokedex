@@ -107,6 +107,13 @@ function DetailView({ pokemon }: { pokemon: PokemonModel }) {
     };
   }, [pokemon.name]);
 
+  // Warm the shiny artwork into the browser cache so toggling shiny is instant
+  // instead of waiting on a network fetch.
+  useEffect(() => {
+    const img = new Image();
+    img.src = shinyArtworkUrl(pokemon.id);
+  }, [pokemon.id]);
+
   // If we arrived from a list, step back in history so its exact page/filter
   // and scroll position are restored; otherwise fall back to the root.
   const goBack = () => {
@@ -135,7 +142,13 @@ function DetailView({ pokemon }: { pokemon: PokemonModel }) {
             src={shiny ? shinyArtworkUrl(pokemon.id) : artworkUrl(pokemon.id)}
             alt=""
             aria-hidden="true"
-            className="pointer-events-none absolute -top-10 left-1/2 z-0 h-72 w-72 -translate-x-1/2 select-none object-contain opacity-25 blur-3xl"
+            className="pointer-events-none absolute -top-10 left-1/2 z-0 h-72 w-72 -translate-x-1/2 select-none object-contain opacity-30 blur-3xl"
+            style={{
+              maskImage:
+                "radial-gradient(circle at center, #000 25%, transparent 70%)",
+              WebkitMaskImage:
+                "radial-gradient(circle at center, #000 25%, transparent 70%)",
+            }}
           />
           <div className="absolute right-4 top-4 z-20 flex items-center gap-1.5">
             <button
