@@ -59,7 +59,7 @@ function PokemonGridCard({ pokemon, from, index }: PokemonGridCardProps) {
   return (
     <Link
       to={`/${pokemon.id}`}
-      state={{ from }}
+      state={{ from, depth: 1 }}
       viewTransition
       onPointerEnter={handleEnter}
       onPointerMove={handleMove}
