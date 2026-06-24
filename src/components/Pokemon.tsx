@@ -88,7 +88,9 @@ function DetailView({ pokemon }: { pokemon: PokemonModel }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [shiny, setShiny] = useState(false);
-  const from = (location.state as { from?: string } | null)?.from;
+  const navState = location.state as { from?: string; depth?: number } | null;
+  const from = navState?.from;
+  const backDepth = navState?.depth ?? 1;
   const primaryType = pokemon.types[0]?.type.name ?? "normal";
   const typeNames = pokemon.types.map((t) => t.type.name);
   const total = pokemon.stats.reduce((sum, s) => sum + s.base_stat, 0);
@@ -114,10 +116,12 @@ function DetailView({ pokemon }: { pokemon: PokemonModel }) {
     img.src = shinyArtworkUrl(pokemon.id);
   }, [pokemon.id]);
 
-  // If we arrived from a list, step back in history so its exact page/filter
-  // and scroll position are restored; otherwise fall back to the root.
+  // If we arrived from a list, step back through history so its exact
+  // page/filter and scroll position are restored. Clicking through an
+  // evolution chain pushes extra entries, so `depth` tracks how many to pop to
+  // reach the original list; otherwise fall back to the root.
   const goBack = () => {
-    if (from) navigate(-1);
+    if (from) navigate(-backDepth);
     else navigate("/");
   };
 
@@ -138,18 +142,26 @@ function DetailView({ pokemon }: { pokemon: PokemonModel }) {
           className="relative flex flex-col items-center overflow-hidden px-6 pb-4 pt-8"
           style={{ background: typeGradient(primaryType) }}
         >
-          <img
-            src={shiny ? shinyArtworkUrl(pokemon.id) : artworkUrl(pokemon.id)}
-            alt=""
+          {/* The radial mask lives on this wrapper, not on the blurred <img>.
+              Safari/iPadOS drops the mask when `filter: blur()` and
+              `mask-image` share an element, leaving the full blurred square
+              (visible vertical bands) behind the artwork. */}
+          <div
             aria-hidden="true"
-            className="pointer-events-none absolute -top-10 left-1/2 z-0 h-72 w-72 -translate-x-1/2 select-none object-contain opacity-30 blur-3xl"
+            className="pointer-events-none absolute -top-10 left-1/2 z-0 h-72 w-72 -translate-x-1/2 overflow-hidden"
             style={{
               maskImage:
                 "radial-gradient(circle at center, #000 25%, transparent 70%)",
               WebkitMaskImage:
                 "radial-gradient(circle at center, #000 25%, transparent 70%)",
             }}
-          />
+          >
+            <img
+              src={shiny ? shinyArtworkUrl(pokemon.id) : artworkUrl(pokemon.id)}
+              alt=""
+              className="h-full w-full select-none object-contain opacity-30 blur-3xl"
+            />
+          </div>
           <div className="absolute right-4 top-4 z-20 flex items-center gap-1.5">
             <button
               type="button"
