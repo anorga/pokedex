@@ -1,19 +1,23 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
   XMarkIcon,
   PlusIcon,
   MagnifyingGlassIcon,
+  LinkIcon,
 } from "@heroicons/react/20/solid";
-import { pokemonId } from "../api/pokeapi";
+import { matchEntries, pokemonId } from "../api/pokeapi";
 import { usePokemonByIds, usePokemonIndex } from "../hooks/usePokemon";
+import { useToast } from "../hooks/useToast";
 import type { Pokemon } from "../types/pokemon";
 import { capitalize, statLabel } from "../utils/format";
 import { typeColor } from "../utils/pokemonTypes";
+import { loadTeam, MAX_TEAM_SLOTS, saveTeam } from "../utils/team";
 import PokemonImage from "./PokemonImage.tsx";
+import TeamCoverage from "./TeamCoverage.tsx";
 import TypeBadge from "./TypeBadge.tsx";
 
-const MAX_SLOTS = 4;
+const MAX_SLOTS = MAX_TEAM_SLOTS;
 const STAT_ORDER = [
   "hp",
   "attack",
@@ -35,10 +39,8 @@ function AddColumn({
   const { data: index } = usePokemonIndex();
 
   const matches = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q || !index) return [];
-    return index
-      .filter((e) => e.name.toLowerCase().includes(q))
+    if (!index) return [];
+    return matchEntries(index, query)
       .filter((e) => !disabledIds.includes(pokemonId(e)))
       .slice(0, 6);
   }, [query, index, disabledIds]);
@@ -181,15 +183,22 @@ function StatRows({ pokemon }: { pokemon: Pokemon[] }) {
 
 function Compare() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { addToast } = useToast();
+  const hasIdsParam = searchParams.has("ids");
   const ids = (searchParams.get("ids") ?? "")
     .split(",")
     .map(Number)
-    .filter((n) => Number.isFinite(n) && n > 0);
+    .filter((n) => Number.isFinite(n) && n > 0)
+    // Dedupe: repeated ids in a hand-edited URL would render duplicate columns.
+    .filter((n, i, arr) => arr.indexOf(n) === i);
 
   const { data, isPending } = usePokemonByIds(ids);
   const pokemon = data.filter((p): p is Pokemon => p !== undefined);
 
   const setIds = (next: number[]) => {
+    // Persist alongside the URL so the team survives navigating away and
+    // feeds "Add to team" on detail pages.
+    saveTeam(next);
     setSearchParams(
       (prev) => {
         const params = new URLSearchParams(prev);
@@ -201,10 +210,29 @@ function Compare() {
     );
   };
 
+  // Visiting bare /compare rehydrates the saved team; a shared ids link
+  // takes precedence (and becomes the saved team on first edit).
+  useEffect(() => {
+    if (hasIdsParam) return;
+    const stored = loadTeam();
+    if (stored.length) setIds(stored);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- mount only
+  }, []);
+
   const addId = (id: number) => {
     if (!ids.includes(id)) setIds([...ids, id]);
   };
   const removeId = (id: number) => setIds(ids.filter((x) => x !== id));
+
+  const copyLink = async () => {
+    const url = `${window.location.origin}/compare?ids=${ids.join(",")}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      addToast("Team link copied");
+    } catch {
+      addToast("Couldn't copy — copy the address bar URL instead");
+    }
+  };
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
@@ -213,8 +241,19 @@ function Compare() {
           Compare
         </h1>
         <p className="mt-1 text-slate-500 dark:text-slate-400">
-          Stack up to {MAX_SLOTS} Pokémon side by side
+          Build a team of up to {MAX_SLOTS} and see how their stats and type
+          coverage stack up
         </p>
+        {ids.length > 0 && (
+          <button
+            type="button"
+            onClick={copyLink}
+            className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:bg-slate-50 hover:shadow dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+          >
+            <LinkIcon className="h-4 w-4" aria-hidden="true" />
+            Copy team link
+          </button>
+        )}
       </header>
 
       <div className="overflow-x-auto pb-2">
@@ -252,6 +291,8 @@ function Compare() {
           />
         )}
       </div>
+
+      {pokemon.length >= 2 && !isPending && <TeamCoverage pokemon={pokemon} />}
 
       {ids.length === 0 && (
         <p className="mt-10 text-center text-slate-400">

@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/20/solid";
 
 interface SearchProps {
@@ -8,6 +9,26 @@ interface SearchProps {
 }
 
 function Search({ filter, isSearching, onFilterChange, onClear }: SearchProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // "/" jumps to the search box (unless already typing somewhere).
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "/" || e.metaKey || e.ctrlKey || e.altKey) return;
+      const target = e.target as HTMLElement;
+      if (
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target.isContentEditable
+      ) {
+        return;
+      }
+      e.preventDefault();
+      inputRef.current?.focus();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
   return (
     <header className="px-4 pb-2 pt-8 text-center sm:pt-10">
       <h1 className="font-display text-5xl tracking-wide text-slate-800 sm:text-6xl dark:text-slate-50">
@@ -24,8 +45,9 @@ function Search({ filter, isSearching, onFilterChange, onClear }: SearchProps) {
       >
         <MagnifyingGlassIcon className="h-5 w-5 shrink-0 text-slate-400" />
         <input
+          ref={inputRef}
           className="w-full bg-transparent text-base text-slate-800 placeholder:text-slate-400 focus:outline-none dark:text-slate-100"
-          placeholder="Search by name…"
+          placeholder="Search by name or number…"
           type="text"
           aria-label="Search Pokémon by name"
           value={filter}

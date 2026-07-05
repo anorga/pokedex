@@ -66,6 +66,17 @@ export interface EvolutionStage {
   name: string;
 }
 
+export interface MoveLearnDetail {
+  level_learned_at: number;
+  move_learn_method: NamedApiResource;
+  version_group: NamedApiResource;
+}
+
+export interface PokemonMove {
+  move: NamedApiResource;
+  version_group_details: MoveLearnDetail[];
+}
+
 export interface Pokemon {
   id: number;
   name: string;
@@ -76,4 +87,11 @@ export interface Pokemon {
   types: PokemonType[];
   stats: PokemonStat[];
   abilities: PokemonAbility[];
+  /**
+   * The owning species. Distinct from `id`/`name` for alternate forms
+   * (mega, gmax, regional variants), whose ids have no species record.
+   */
+  species: NamedApiResource;
+  moves: PokemonMove[];
+  cries?: { latest: string | null; legacy: string | null };
 }

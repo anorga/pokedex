@@ -80,6 +80,25 @@ export function useEvolution(url: string | undefined) {
   });
 }
 
+/**
+ * Damage multipliers for each team member's type combo, aligned with the
+ * input array. Reuses the same cache entries as useTypeEffectiveness.
+ */
+export function useTeamEffectiveness(teamTypes: string[][]) {
+  const queries = useQueries({
+    queries: teamTypes.map((types) => ({
+      queryKey: ["effectiveness", [...types].sort().join(",")],
+      queryFn: ({ signal }: { signal: AbortSignal }) =>
+        fetchTypeEffectiveness(types, signal),
+      enabled: types.length > 0,
+    })),
+  });
+  return {
+    data: queries.map((q) => q.data),
+    isPending: teamTypes.length > 0 && queries.some((q) => q.isPending),
+  };
+}
+
 /** Combined damage multipliers this Pokemon takes, keyed by attacking type. */
 export function useTypeEffectiveness(types: string[]) {
   const key = [...types].sort().join(",");

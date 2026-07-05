@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import Controls from "./Controls.tsx";
@@ -13,7 +13,7 @@ import {
   usePokemonSearch,
   useTypeEntries,
 } from "../hooks/usePokemon";
-import { fetchEntriesPage, PAGE_SIZE } from "../api/pokeapi";
+import { fetchEntriesPage, matchEntries, PAGE_SIZE } from "../api/pokeapi";
 import { capitalize } from "../utils/format";
 import { filterByGeneration, generationById } from "../utils/generations";
 import { isSortKey, sortEntries, type SortKey } from "../utils/sort";
@@ -94,6 +94,17 @@ function Pokedex() {
 
   const totalPages = Math.max(1, Math.ceil(view.totalCount / PAGE_SIZE));
 
+  // Scroll back to the top when the page number changes. Param patches use
+  // replace, so ScrollToTop (keyed on pathname/navigationType) never fires for
+  // paging. Skip the first render so back-navigation keeps its restored
+  // scroll position.
+  const prevPage = useRef(page);
+  useEffect(() => {
+    if (prevPage.current === page) return;
+    prevPage.current = page;
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [page]);
+
   // Seed the per-Pokémon detail cache so opening a card is instant.
   useEffect(() => {
     for (const p of view.items) {
@@ -125,6 +136,14 @@ function Pokedex() {
   }, [isSearching, page, totalPages, keySuffix, entries, queryClient]);
 
   const term = debouncedFilter.trim();
+
+  // Total index matches for the search term; results are capped at PAGE_SIZE,
+  // so the status line should say "first 20 of N" rather than lie about N.
+  const totalMatches = useMemo(
+    () => (isSearching && index ? matchEntries(index, term).length : 0),
+    [isSearching, index, term],
+  );
+
   const genLabel = generationById(selectedGen)?.label;
   let statusLine: string | null = null;
   if (!view.isPending && !view.isError) {
@@ -132,7 +151,9 @@ function Pokedex() {
       statusLine =
         view.items.length === 0
           ? `No results for "${term}"`
-          : `${view.items.length} result${view.items.length === 1 ? "" : "s"} for "${term}"`;
+          : totalMatches > view.items.length
+            ? `Showing first ${view.items.length} of ${totalMatches} matches for "${term}"`
+            : `${view.items.length} result${view.items.length === 1 ? "" : "s"} for "${term}"`;
     } else if (selectedType || selectedGen) {
       const parts = [
         selectedType ? `${capitalize(selectedType)}-type` : null,
