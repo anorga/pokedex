@@ -22,7 +22,9 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
-      registerType: "autoUpdate",
+      // "prompt" so UpdatePrompt can offer a refresh instead of the new
+      // service worker swapping in silently mid-session.
+      registerType: "prompt",
       includeAssets: ["favicon.ico"],
       manifest: {
         name: "Pokédex",

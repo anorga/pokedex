@@ -16,6 +16,11 @@ const bulbasaur: Pokemon = {
   abilities: [
     { ability: { name: "overgrow", url: "" }, is_hidden: false, slot: 1 },
   ],
+  species: {
+    name: "bulbasaur",
+    url: "https://pokeapi.co/api/v2/pokemon-species/1/",
+  },
+  moves: [],
 };
 
 function renderCard(props: Partial<Parameters<typeof PokemonCard>[0]> = {}) {

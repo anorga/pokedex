@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Combobox,
   ComboboxInput,
@@ -10,15 +10,17 @@ import {
   DialogPanel,
 } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import { pokemonId } from "../api/pokeapi";
+import { matchEntries, pokemonId } from "../api/pokeapi";
 import { usePokemonIndex } from "../hooks/usePokemon";
 import type { NamedApiResource } from "../types/pokemon";
 import { capitalize, formatDexId } from "../utils/format";
+import { detailNavState } from "../utils/navState";
 
 export const OPEN_COMMAND_PALETTE = "open-command-palette";
 
 function CommandPalette() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const { data: index } = usePokemonIndex();
@@ -44,13 +46,10 @@ function CommandPalette() {
     setQuery("");
   };
 
-  const matches: NamedApiResource[] = query.trim()
-    ? (index ?? [])
-        .filter((e) =>
-          e.name.toLowerCase().includes(query.trim().toLowerCase()),
-        )
-        .slice(0, 8)
-    : [];
+  const matches: NamedApiResource[] = matchEntries(index ?? [], query).slice(
+    0,
+    8,
+  );
 
   return (
     <Dialog open={open} onClose={close} className="relative z-[60]">
@@ -60,7 +59,10 @@ function CommandPalette() {
           <Combobox
             onChange={(entry: NamedApiResource | null) => {
               if (!entry) return;
-              navigate(`/${pokemonId(entry)}`);
+              // Carry the list location so "Back to Pokédex" restores it.
+              navigate(`/${pokemonId(entry)}`, {
+                state: detailNavState(location),
+              });
               close();
             }}
           >
@@ -69,7 +71,7 @@ function CommandPalette() {
               <ComboboxInput
                 autoFocus
                 className="w-full bg-transparent py-3.5 text-base text-slate-800 placeholder:text-slate-400 focus:outline-none dark:text-slate-100"
-                placeholder="Search Pokémon…"
+                placeholder="Search by name or number…"
                 onChange={(e) => setQuery(e.target.value)}
               />
             </div>

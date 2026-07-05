@@ -1,8 +1,27 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeftIcon, SparklesIcon } from "@heroicons/react/24/outline";
-import { artworkUrl, shinyArtworkUrl } from "../api/pokeapi";
-import { usePokemonDetail, useSpecies } from "../hooks/usePokemon";
+import {
+  ArrowLeftIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ScaleIcon,
+  SparklesIcon,
+  SpeakerWaveIcon,
+} from "@heroicons/react/24/outline";
+import {
+  artworkUrl,
+  MAX_DEX_ID,
+  pokemonId,
+  shinyArtworkUrl,
+} from "../api/pokeapi";
+import {
+  usePokemonByIds,
+  usePokemonDetail,
+  useSpecies,
+} from "../hooks/usePokemon";
+import { detailNavState } from "../utils/navState";
+import { loadTeam, MAX_TEAM_SLOTS, saveTeam } from "../utils/team";
+import { useToast } from "../hooks/useToast";
 import { useCountUp } from "../hooks/useCountUp";
 import {
   capitalize,
@@ -18,6 +37,7 @@ import { typeColor, typeGradient } from "../utils/pokemonTypes";
 import type { Pokemon as PokemonModel } from "../types/pokemon";
 import EvolutionChain from "./EvolutionChain.tsx";
 import FavoriteButton from "./FavoriteButton.tsx";
+import Moves from "./Moves.tsx";
 import PokemonImage from "./PokemonImage.tsx";
 import StatRadar from "./StatRadar.tsx";
 import TypeBadge from "./TypeBadge.tsx";
@@ -96,7 +116,9 @@ function DetailView({ pokemon }: { pokemon: PokemonModel }) {
   const total = pokemon.stats.reduce((sum, s) => sum + s.base_stat, 0);
   const totalDisplay = useCountUp(total);
 
-  const { data: species } = useSpecies(pokemon.id);
+  // Look species up by name, not pokemon id: alternate forms (mega, gmax,
+  // regional) have ids above 10000 with no species record of their own.
+  const { data: species } = useSpecies(pokemon.species?.name ?? pokemon.id);
   const flavor = species?.flavor_text_entries.find(
     (e) => e.language.name === "en",
   )?.flavor_text;
@@ -115,6 +137,71 @@ function DetailView({ pokemon }: { pokemon: PokemonModel }) {
     const img = new Image();
     img.src = shinyArtworkUrl(pokemon.id);
   }, [pokemon.id]);
+
+  // Prev/next walk the national dex by species id, so alternate-form pages
+  // (id > 10000) step from their base species instead of dead-ending.
+  const dexId = pokemon.species ? pokemonId(pokemon.species) : pokemon.id;
+  const prevId = dexId > 1 ? dexId - 1 : null;
+  const nextId = dexId < MAX_DEX_ID ? dexId + 1 : null;
+  const neighborIds = [prevId, nextId].filter((n): n is number => n !== null);
+  // Warm the neighbor detail cache so stepping is instant.
+  const { data: neighbors } = usePokemonByIds(neighborIds);
+  const neighborName = (id: number | null) => {
+    const p = id === null ? undefined : neighbors.find((n) => n?.id === id);
+    return p ? capitalize(p.name) : undefined;
+  };
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
+      const target = e.target as HTMLElement;
+      if (
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target.isContentEditable
+      ) {
+        return;
+      }
+      if (e.key === "ArrowLeft" && prevId) {
+        navigate(`/${prevId}`, { state: detailNavState(location) });
+      } else if (e.key === "ArrowRight" && nextId) {
+        navigate(`/${nextId}`, { state: detailNavState(location) });
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [prevId, nextId, navigate, location]);
+
+  const { addToast } = useToast();
+  const addToTeam = () => {
+    const team = loadTeam();
+    if (team.includes(pokemon.id)) {
+      addToast("Already on your team");
+      return;
+    }
+    if (team.length >= MAX_TEAM_SLOTS) {
+      addToast("Team is full (6)", {
+        label: "View",
+        onAction: () => navigate("/compare"),
+      });
+      return;
+    }
+    saveTeam([...team, pokemon.id]);
+    addToast(`${capitalize(pokemon.name)} added to team`, {
+      label: "View",
+      onAction: () => navigate("/compare"),
+    });
+  };
+
+  const cryUrl = pokemon.cries?.latest ?? pokemon.cries?.legacy ?? null;
+  const playCry = () => {
+    if (!cryUrl) return;
+    const audio = new Audio(cryUrl);
+    audio.volume = 0.4;
+    void audio.play().catch(() => {
+      // Autoplay restrictions or a missing file; nothing useful to surface.
+    });
+  };
 
   // If we arrived from a list, step back through history so its exact
   // page/filter and scroll position are restored. Clicking through an
@@ -162,7 +249,49 @@ function DetailView({ pokemon }: { pokemon: PokemonModel }) {
               className="h-full w-full select-none object-contain opacity-30 blur-3xl"
             />
           </div>
+          {prevId && (
+            <Link
+              to={`/${prevId}`}
+              state={detailNavState(location)}
+              aria-label={`Previous: ${neighborName(prevId) ?? formatDexId(prevId)}`}
+              title={neighborName(prevId) ?? formatDexId(prevId)}
+              className="absolute left-3 top-1/2 z-20 grid -translate-y-1/2 place-items-center rounded-full bg-white/80 p-1.5 text-slate-500 shadow-sm backdrop-blur-sm transition hover:scale-110 dark:bg-slate-900/70 dark:text-slate-300"
+            >
+              <ChevronLeftIcon className="h-6 w-6" aria-hidden="true" />
+            </Link>
+          )}
+          {nextId && (
+            <Link
+              to={`/${nextId}`}
+              state={detailNavState(location)}
+              aria-label={`Next: ${neighborName(nextId) ?? formatDexId(nextId)}`}
+              title={neighborName(nextId) ?? formatDexId(nextId)}
+              className="absolute right-3 top-1/2 z-20 grid -translate-y-1/2 place-items-center rounded-full bg-white/80 p-1.5 text-slate-500 shadow-sm backdrop-blur-sm transition hover:scale-110 dark:bg-slate-900/70 dark:text-slate-300"
+            >
+              <ChevronRightIcon className="h-6 w-6" aria-hidden="true" />
+            </Link>
+          )}
           <div className="absolute right-4 top-4 z-20 flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={addToTeam}
+              aria-label="Add to compare team"
+              title="Add to team"
+              className="grid place-items-center rounded-full bg-white/80 p-1.5 text-slate-400 shadow-sm backdrop-blur-sm transition hover:scale-110 dark:bg-slate-900/70 dark:text-slate-300"
+            >
+              <ScaleIcon className="h-6 w-6" aria-hidden="true" />
+            </button>
+            {cryUrl && (
+              <button
+                type="button"
+                onClick={playCry}
+                aria-label="Play cry"
+                title="Play cry"
+                className="grid place-items-center rounded-full bg-white/80 p-1.5 text-slate-400 shadow-sm backdrop-blur-sm transition hover:scale-110 dark:bg-slate-900/70 dark:text-slate-300"
+              >
+                <SpeakerWaveIcon className="h-6 w-6" aria-hidden="true" />
+              </button>
+            )}
             <button
               type="button"
               onClick={() => setShiny((s) => !s)}
@@ -280,8 +409,16 @@ function DetailView({ pokemon }: { pokemon: PokemonModel }) {
           <Section title="Evolution">
             <EvolutionChain
               evolutionUrl={species?.evolution_chain.url}
-              currentId={pokemon.id}
+              // Evolution stages are species; use the species id so the
+              // current stage still highlights on alternate-form pages.
+              currentId={
+                pokemon.species ? pokemonId(pokemon.species) : pokemon.id
+              }
             />
+          </Section>
+
+          <Section title="Moves">
+            <Moves moves={pokemon.moves ?? []} />
           </Section>
         </div>
       </div>

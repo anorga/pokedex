@@ -1,6 +1,6 @@
-import { useNavigate } from "react-router-dom";
-
-const MAX_DEX_ID = 1025;
+import { useLocation, useNavigate } from "react-router-dom";
+import { MAX_DEX_ID } from "../api/pokeapi";
+import { detailNavState } from "../utils/navState";
 
 function DiceIcon({ className }: { className?: string }) {
   return (
@@ -26,10 +26,12 @@ function DiceIcon({ className }: { className?: string }) {
 
 function RandomButton() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const goRandom = () => {
     const id = Math.floor(Math.random() * MAX_DEX_ID) + 1;
-    navigate(`/${id}`);
+    // Carry the list location so "Back to Pokédex" restores where we were.
+    navigate(`/${id}`, { state: detailNavState(location) });
   };
 
   return (

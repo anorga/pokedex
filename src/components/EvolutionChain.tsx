@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { useEvolution, usePokemonByIds } from "../hooks/usePokemon";
 import { capitalize, formatDexId } from "../utils/format";
+import { detailNavState } from "../utils/navState";
 import PokemonImage from "./PokemonImage.tsx";
 
 interface EvolutionChainProps {
@@ -14,7 +15,7 @@ function EvolutionChain({ evolutionUrl, currentId }: EvolutionChainProps) {
   // Carry the original list location forward (rather than this detail page) and
   // count each evolution hop, so "Back to Pokédex" returns to the list the user
   // came from instead of the previous evolution.
-  const navState = location.state as { from?: string; depth?: number } | null;
+  const navState = detailNavState(location);
   const { data: stages, isPending, isError } = useEvolution(evolutionUrl);
   const ids = stages?.map((s) => s.id) ?? [];
   // Warm the detail cache for each stage so clicking through is instant.
@@ -57,10 +58,7 @@ function EvolutionChain({ evolutionUrl, currentId }: EvolutionChainProps) {
             )}
             <Link
               to={`/${stage.id}`}
-              state={{
-                from: navState?.from,
-                depth: (navState?.depth ?? 1) + 1,
-              }}
+              state={navState}
               className={`flex w-24 flex-col items-center rounded-xl p-2 transition hover:bg-slate-100 dark:hover:bg-slate-700/50 ${
                 isCurrent ? "bg-slate-100 dark:bg-slate-700/50" : ""
               }`}

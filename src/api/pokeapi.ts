@@ -13,6 +13,9 @@ const BASE_URL = "https://pokeapi.co/api/v2";
 
 export const PAGE_SIZE = 20;
 
+/** Highest national-dex id (Gen IX / Paldea). */
+export const MAX_DEX_ID = 1025;
+
 /** A page of resolved Pokemon plus the total available, for pagination. */
 export interface PokemonPage {
   items: Pokemon[];
@@ -90,6 +93,25 @@ export async function fetchPokemonIndex(
   return data.results;
 }
 
+/**
+ * Index entries matching a search term. Numeric terms (with an optional "#")
+ * match the dex id exactly; anything else matches as a name substring.
+ */
+export function matchEntries(
+  index: NamedApiResource[],
+  term: string,
+): NamedApiResource[] {
+  const needle = term.trim().toLowerCase();
+  if (!needle) return [];
+
+  const numeric = needle.match(/^#?(\d+)$/);
+  if (numeric) {
+    const id = Number(numeric[1]);
+    return index.filter((entry) => pokemonId(entry) === id);
+  }
+  return index.filter((entry) => entry.name.toLowerCase().includes(needle));
+}
+
 /** Resolve full detail records for index entries matching a search term. */
 export async function searchPokemon(
   index: NamedApiResource[],
@@ -97,14 +119,7 @@ export async function searchPokemon(
   signal?: AbortSignal,
   limit = PAGE_SIZE,
 ): Promise<Pokemon[]> {
-  const needle = term.trim().toLowerCase();
-  if (!needle) return [];
-
-  const matches = index
-    .filter((entry) => entry.name.toLowerCase().includes(needle))
-    .slice(0, limit);
-
-  return resolveDetails(matches, signal);
+  return resolveDetails(matchEntries(index, term).slice(0, limit), signal);
 }
 
 /** The sorted list of Pokemon entries belonging to a given type. */

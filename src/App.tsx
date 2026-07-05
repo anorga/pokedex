@@ -10,6 +10,8 @@ import ScrollToTop from "./components/ScrollToTop.tsx";
 import CommandPalette from "./components/CommandPalette.tsx";
 import ProgressBar from "./components/ProgressBar.tsx";
 import BackToTop from "./components/BackToTop.tsx";
+import OfflineBanner from "./components/OfflineBanner.tsx";
+import UpdatePrompt from "./components/UpdatePrompt.tsx";
 
 function App() {
   return (
@@ -18,6 +20,7 @@ function App() {
       <ProgressBar />
       <CommandPalette />
       <Nav />
+      <OfflineBanner />
       <main className="flex-1">
         <ErrorBoundary>
           <Routes>
@@ -30,6 +33,7 @@ function App() {
       </main>
       <Footer />
       <BackToTop />
+      <UpdatePrompt />
     </div>
   );
 }
