@@ -1,19 +1,19 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import Controls from "./Controls.tsx";
-import Pagination from "./Pagination.tsx";
+import InfinitePokemonGrid from "./InfinitePokemonGrid.tsx";
 import PokemonCard from "./PokemonCard.tsx";
 import Search from "./Search.tsx";
 import TypeFilter from "./TypeFilter.tsx";
 import { useDebouncedValue } from "../hooks/useDebouncedValue";
 import {
-  usePagedPokemon,
+  useInfinitePokemon,
   usePokemonIndex,
   usePokemonSearch,
   useTypeEntries,
 } from "../hooks/usePokemon";
-import { fetchEntriesPage, matchEntries, PAGE_SIZE } from "../api/pokeapi";
+import { matchEntries } from "../api/pokeapi";
 import { capitalize } from "../utils/format";
 import { filterByGeneration, generationById } from "../utils/generations";
 import { isSortKey, sortEntries, type SortKey } from "../utils/sort";
@@ -23,7 +23,6 @@ function Pokedex() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // URL is the source of truth so views are shareable and restored on return.
-  const page = Math.max(1, Number(searchParams.get("page")) || 1);
   const selectedType = searchParams.get("type");
   const selectedGen = searchParams.get("gen");
   const sortParam = searchParams.get("sort");
@@ -35,15 +34,15 @@ function Pokedex() {
   const isSearching = debouncedFilter.trim().length > 0;
 
   const patchParams = useCallback(
-    (patch: Record<string, string | number | null>) => {
+    (patch: Record<string, string | null>) => {
       setSearchParams(
         (prev) => {
           const next = new URLSearchParams(prev);
           for (const [key, value] of Object.entries(patch)) {
-            if (value === null || value === "" || value === 1) {
+            if (value === null || value === "") {
               next.delete(key);
             } else {
-              next.set(key, String(value));
+              next.set(key, value);
             }
           }
           return next;
@@ -54,11 +53,11 @@ function Pokedex() {
     [setSearchParams],
   );
 
-  // Sync the debounced search term into the URL (resetting the page).
+  // Sync the debounced search term into the URL.
   useEffect(() => {
     const term = debouncedFilter.trim();
     if (term === urlQuery) return;
-    patchParams({ q: term || null, page: 1 });
+    patchParams({ q: term || null });
   }, [debouncedFilter, urlQuery, patchParams]);
 
   const { data: index } = usePokemonIndex();
@@ -74,7 +73,11 @@ function Pokedex() {
   );
   const listReady = !!base;
   const keySuffix = `${selectedType ?? "all"}|${selectedGen ?? "all"}|${sort}`;
-  const pagedQuery = usePagedPokemon(entries, page, keySuffix, listReady);
+  const infinite = useInfinitePokemon(entries, keySuffix, listReady);
+  const browseItems = useMemo(
+    () => infinite.data?.pages.flatMap((p) => p.items) ?? [],
+    [infinite.data],
+  );
 
   const view = isSearching
     ? {
@@ -82,28 +85,13 @@ function Pokedex() {
         isPending: searchQuery.isPending,
         isError: searchQuery.isError,
         totalCount: searchQuery.data?.length ?? 0,
-        paginated: false,
       }
     : {
-        items: pagedQuery.data?.items ?? [],
-        isPending: !listReady || pagedQuery.isPending,
-        isError: typeEntries.isError || pagedQuery.isError,
-        totalCount: pagedQuery.data?.totalCount ?? entries.length,
-        paginated: true,
+        items: browseItems,
+        isPending: !listReady || infinite.isPending,
+        isError: typeEntries.isError || infinite.isError,
+        totalCount: infinite.data?.pages[0]?.totalCount ?? entries.length,
       };
-
-  const totalPages = Math.max(1, Math.ceil(view.totalCount / PAGE_SIZE));
-
-  // Scroll back to the top when the page number changes. Param patches use
-  // replace, so ScrollToTop (keyed on pathname/navigationType) never fires for
-  // paging. Skip the first render so back-navigation keeps its restored
-  // scroll position.
-  const prevPage = useRef(page);
-  useEffect(() => {
-    if (prevPage.current === page) return;
-    prevPage.current = page;
-    window.scrollTo({ top: 0, behavior: "instant" });
-  }, [page]);
 
   // Seed the per-Pokémon detail cache so opening a card is instant.
   useEffect(() => {
@@ -112,28 +100,19 @@ function Pokedex() {
     }
   }, [view.items, queryClient]);
 
-  const resetForFilter = (patch: Record<string, string | number | null>) => {
+  const resetForFilter = (patch: Record<string, string | null>) => {
     setFilter("");
-    patchParams({ q: null, page: 1, ...patch });
+    patchParams({ q: null, ...patch });
+    // Filter changes swap the whole list out; start it from the top.
+    window.scrollTo({ top: 0, behavior: "instant" });
   };
 
   const handleSelectType = (type: string | null) => resetForFilter({ type });
   const handleSelectGen = (gen: string | null) => resetForFilter({ gen });
-  const handleSort = (next: SortKey) => patchParams({ sort: next, page: 1 });
-
-  const toNextPage = () =>
-    patchParams({ page: Math.min(totalPages, page + 1) });
-  const toPrevPage = () => patchParams({ page: Math.max(1, page - 1) });
-
-  // Warm the next page's detail records so paging feels instant.
-  const prefetchNextPage = useCallback(() => {
-    if (isSearching || page >= totalPages) return;
-    const next = page + 1;
-    queryClient.prefetchQuery({
-      queryKey: ["paged", keySuffix, next],
-      queryFn: ({ signal }) => fetchEntriesPage(entries, next, signal),
-    });
-  }, [isSearching, page, totalPages, keySuffix, entries, queryClient]);
+  const handleSort = (next: SortKey) => {
+    patchParams({ sort: next });
+    window.scrollTo({ top: 0, behavior: "instant" });
+  };
 
   const term = debouncedFilter.trim();
 
@@ -183,18 +162,20 @@ function Pokedex() {
           {statusLine}
         </p>
       )}
-      <PokemonCard
-        pokemon={view.items}
-        isLoading={view.isPending}
-        isError={view.isError}
-      />
-      {view.paginated && (
-        <Pagination
-          page={page}
-          totalPages={totalPages}
-          onPrev={toPrevPage}
-          onNext={toNextPage}
-          onNextHover={prefetchNextPage}
+      {isSearching ? (
+        <PokemonCard
+          pokemon={view.items}
+          isLoading={view.isPending}
+          isError={view.isError}
+        />
+      ) : (
+        <InfinitePokemonGrid
+          items={browseItems}
+          isLoading={view.isPending}
+          isError={view.isError}
+          hasNextPage={!!infinite.hasNextPage}
+          isFetchingNextPage={infinite.isFetchingNextPage}
+          fetchNextPage={() => void infinite.fetchNextPage()}
         />
       )}
     </>
