@@ -1,6 +1,7 @@
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueries, useQuery } from "@tanstack/react-query";
 import {
   fetchEntriesPage,
+  PAGE_SIZE,
   fetchEvolutionStages,
   fetchPokemon,
   fetchPokemonIndex,
@@ -19,18 +20,26 @@ export function usePokemonIndex() {
   });
 }
 
-/** One client-paginated page of a (filtered, sorted) entry list. */
-export function usePagedPokemon(
+/**
+ * Infinitely-scrolled pages of a (filtered, sorted) entry list. Loaded pages
+ * accumulate in the cache, so returning to the list re-renders everything the
+ * user had scrolled through and their position restores.
+ */
+export function useInfinitePokemon(
   entries: NamedApiResource[],
-  page: number,
   keySuffix: string,
   ready: boolean,
 ) {
-  return useQuery({
-    queryKey: ["paged", keySuffix, page],
-    queryFn: ({ signal }) => fetchEntriesPage(entries, page, signal),
+  return useInfiniteQuery({
+    queryKey: ["infinite", keySuffix],
+    queryFn: ({ pageParam, signal }) =>
+      fetchEntriesPage(entries, pageParam, signal),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, pages) =>
+      pages.length * PAGE_SIZE < lastPage.totalCount
+        ? pages.length + 1
+        : undefined,
     enabled: ready,
-    placeholderData: (prev) => prev,
   });
 }
 
