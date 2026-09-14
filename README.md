@@ -12,7 +12,7 @@ A fast, installable Pokédex built with React 19, TypeScript, and Vite, powered 
 - Command palette (`⌘K` / `Ctrl+K`) for quick jump
 - Random Pokémon button
 - Detail pages: stats (bars + radar chart), type matchups, evolution chain, abilities, flavor text, shiny toggle
-- Compare up to 4 Pokémon side by side
+- Build and compare a team of up to 6 Pokémon, including shared weaknesses and type coverage
 - Favorites, saved locally
 - Shareable, bookmarkable URLs for every view
 - Light / dark mode
